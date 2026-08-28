@@ -5,7 +5,7 @@ project:
   description: GPT för evidensbaserad kartläggning av vilka svenska myndigheter som
     sannolikt använder en viss teknologi eller produkt samt för efterföljande identifiering
     av relevanta professionella kontaktpersoner.
-  version: 1.0.1
+  version: 1.0.2
   language: sv
 profile:
   selected: workflow_research_heavy

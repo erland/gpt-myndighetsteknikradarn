@@ -42,3 +42,12 @@ def test_project_declares_github_release_support():
     github = cfg['release']['github']
     assert github['enabled'] is True
     assert github['version_source'] == 'github_release_tag'
+
+
+def test_python_setup_cache_uses_actual_dependency_file_and_current_actions():
+    for rel in ['.github/workflows/ci.yml', '.github/workflows/release.yml']:
+        text = (ROOT / rel).read_text(encoding='utf-8')
+        assert 'actions/checkout@v7' in text
+        assert 'actions/setup-python@v7' in text
+        assert 'cache: pip' in text
+        assert 'cache-dependency-path: requirements-dev.txt' in text

@@ -1,6 +1,6 @@
 # Status – Myndighetsteknikradarn
 
-**Version:** 1.0.1  
+**Version:** 1.0.2  
 **Utvecklingsplan:** 15/15 steg genomförda  
 **Tillstånd:** Stabil release – maintenance mode
 
@@ -8,7 +8,7 @@
 
 - Steg 1–15 är genomförda.
 - `1.0.0-rc.1` provades i faktisk användning utan blockerande problem och blev stabil `1.0.0`.
-- `1.0.1` kompletterar projektet med GitHub Actions för CI-validering och releasebyggnad; runtimebeteendet är oförändrat.
+- `1.0.2` kompletterar projektet med GitHub Actions för CI-validering och releasebyggnad; runtimebeteendet är oförändrat.
 - Chat ZIP och Custom GPT-distribution kan byggas lokalt eller automatiskt via GitHub Actions.
 
 ## GitHub Actions

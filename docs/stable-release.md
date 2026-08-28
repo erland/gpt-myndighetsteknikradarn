@@ -37,3 +37,7 @@ Projektet innehåller två workflows under `.github/workflows/`:
 - `release.yml` kör samma kvalitetsgates när en GitHub Release publiceras och bygger Chat ZIP samt Custom GPT ZIP med **versionsnumret från release-taggen**. Paketen och deras SHA-256-filer laddas upp som assets till GitHub Release.
 
 Release-taggar kan vara exempelvis `v1.0.1` eller `1.0.1`; ett inledande `v` tas bort i distributionsfilernas versionsnummer. Projektets `gpt-project.yaml` behöver därför inte redigeras enbart för att distributionsfilerna ska få release-taggen som versionsnummer.
+
+## GitHub Actions-fix i 1.0.2
+
+`1.0.2` rättar CI/release-setupen så `actions/setup-python` använder `requirements-dev.txt` som explicit cache dependency path. Workflows använder även aktuella `actions/checkout@v7` och `actions/setup-python@v7`. Detta rättar valideringsfelet där pip-cache annars letade efter `requirements.txt` eller `pyproject.toml`. Runtimebeteendet är oförändrat.

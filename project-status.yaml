@@ -36,7 +36,7 @@ state:
 next_step:
   recommended: null
   title: Maintenance
-  reason: Version 1.0.1 är stabil. GitHub Actions validerar projektet på PR/push och
+  reason: Version 1.0.2 är stabil. GitHub Actions validerar projektet på PR/push och
     bygger distributionspaket från GitHub Release-taggen.
 resume:
   supported: true
@@ -46,11 +46,11 @@ resume:
   - docs/development-plan.md
   - STATUS.md
   - PROJECT.md
-  human_readable_status: Version 1.0.1 är stabil och projektet är i maintenance mode.
+  human_readable_status: Version 1.0.2 är stabil och projektet är i maintenance mode.
     Alla 15 utvecklingssteg är genomförda; CI/releaseautomatisering finns under .github/workflows.
 release:
   state: stable
-  version: 1.0.1
+  version: 1.0.2
   promoted_from: 1.0.0
   runtime_smoke_test: passed_on_1.0.0
   maintenance_mode: true
