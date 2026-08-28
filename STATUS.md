@@ -1,19 +1,24 @@
 # Status – Myndighetsteknikradarn
 
-**Version:** 1.0.0  
+**Version:** 1.0.1  
 **Utvecklingsplan:** 15/15 steg genomförda  
 **Tillstånd:** Stabil release – maintenance mode
 
 ## Genomfört
 
 - Steg 1–15 är genomförda.
-- RC `1.0.0-rc.1` har provats i faktisk användning utan blockerande problem.
-- Chat ZIP och Custom GPT-distribution byggs för stabil `1.0.0`.
-- Regressionstester, automatiska realistiska evals och releasegates körs på den rensade stabila källan.
+- `1.0.0-rc.1` provades i faktisk användning utan blockerande problem och blev stabil `1.0.0`.
+- `1.0.1` kompletterar projektet med GitHub Actions för CI-validering och releasebyggnad; runtimebeteendet är oförändrat.
+- Chat ZIP och Custom GPT-distribution kan byggas lokalt eller automatiskt via GitHub Actions.
+
+## GitHub Actions
+
+- `.github/workflows/ci.yml`: lint, hygiene, regressionstester, realistiska evals, byggnad och validering av båda distributionerna på PR/push/manuell körning.
+- `.github/workflows/release.yml`: samma gates vid publicerad GitHub Release, versionsnummer från release-taggen och uppladdning av ZIP + SHA-256 som release assets.
 
 ## Projektstädning
 
-Historiska stegvisa rapporter, genererade build/dist-kataloger och cachefiler ingår inte längre i canonical projekt. Runtime-testerna använder projektets aktuella version i stället för hårdkodade äldre utvecklingsversioner.
+Historiska stegvisa rapporter, genererade build/dist-kataloger och cachefiler ingår inte i canonical projekt. Runtime-testerna använder projektets aktuella version i stället för hårdkodade äldre utvecklingsversioner.
 
 ## Kända begränsningar
 

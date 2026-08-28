@@ -88,4 +88,4 @@ Custom GPT är sekundär runtime. Den kompilerade distributionen använder en in
 
 ## Release candidate
 
-Version `1.0.0` är den första stabila releasen efter slutförd utvecklingsplan steg 1–15 och godkänd RC-provning. Se `docs/stable-release.md` för releasegates och kända begränsningar.
+Version `1.0.1` är den första stabila releasen efter slutförd utvecklingsplan steg 1–15 och godkänd RC-provning. Se `docs/stable-release.md` för releasegates och kända begränsningar.

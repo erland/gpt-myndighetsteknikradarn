@@ -2,9 +2,10 @@ schema_version: 1
 project:
   id: myndighetsteknikradarn
   name: Myndighetsteknikradarn
-  description: GPT för evidensbaserad kartläggning av vilka svenska myndigheter som sannolikt använder
-    en viss teknologi eller produkt samt för efterföljande identifiering av relevanta professionella kontaktpersoner.
-  version: 1.0.0
+  description: GPT för evidensbaserad kartläggning av vilka svenska myndigheter som
+    sannolikt använder en viss teknologi eller produkt samt för efterföljande identifiering
+    av relevanta professionella kontaktpersoner.
+  version: 1.0.1
   language: sv
 profile:
   selected: workflow_research_heavy
@@ -100,7 +101,14 @@ testing:
   critical_eval_failure_blocks_release: true
 release:
   github:
-    enabled: false
+    enabled: true
+    ci_workflow: .github/workflows/ci.yml
+    release_workflow: .github/workflows/release.yml
+    version_source: github_release_tag
+    artifacts:
+    - chat_zip
+    - custom_gpt_zip
+    - checksums
 policies:
   research_workflow: src/policies/research-workflow.md
   technology_normalization: src/policies/technology-normalization.md

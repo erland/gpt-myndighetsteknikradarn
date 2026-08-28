@@ -1,0 +1,122 @@
+name: Release distributions
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build, e.g. 1.0.1'
+        required: true
+        type: string
+      upload_to_release:
+        description: 'Upload to an existing GitHub Release with tag v<version> or <version>'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Validate, build and publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - name: Install validation dependencies
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-dev.txt
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          MANUAL_VERSION: ${{ inputs.version }}
+        run: |
+          if [[ "$EVENT_NAME" == "release" ]]; then
+            VERSION="${RELEASE_TAG#v}"
+            TAG="$RELEASE_TAG"
+          else
+            VERSION="${MANUAL_VERSION#v}"
+            TAG="v$VERSION"
+          fi
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "Unsupported release version: $VERSION" >&2
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Lint canonical project
+        run: python scripts/lint_gpt_project.py --project-root .
+
+      - name: Validate project hygiene
+        run: python scripts/project_hygiene.py --project-root . --mode final
+
+      - name: Run regression tests
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python -m pytest -q
+
+      - name: Run realistic evals
+        env:
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: python scripts/run_evals.py --json
+
+      - name: Remove test-generated build artifacts
+        shell: bash
+        run: rm -rf build dist .pytest_cache tests/__pycache__ scripts/__pycache__
+
+      - name: Build Chat ZIP from release tag
+        run: python scripts/build_chat_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"
+
+      - name: Build Custom GPT ZIP from release tag
+        run: python scripts/build_custom_gpt_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"
+
+      - name: Validate built distributions
+        run: python scripts/validate_distributions.py --project-root .
+
+      - name: Verify distribution checksums
+        shell: bash
+        run: |
+          cd dist
+          sha256sum --check *.zip.sha256
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: myndighetsteknikradarn-${{ steps.version.outputs.version }}
+          path: |
+            dist/*.zip
+            dist/*.zip.sha256
+          if-no-files-found: error
+
+      - name: Upload files to published GitHub Release
+        if: github.event_name == 'release'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: gh release upload "$TAG" dist/*.zip dist/*.zip.sha256 --clobber
+
+      - name: Upload files to manually selected GitHub Release
+        if: github.event_name == 'workflow_dispatch' && inputs.upload_to_release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            TAG="${TAG#v}"
+          fi
+          gh release upload "$TAG" dist/*.zip dist/*.zip.sha256 --clobber
