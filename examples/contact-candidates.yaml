@@ -1,0 +1,99 @@
+target:
+  canonical_name: Red Hat OpenShift
+selected_agency_count: 2
+searched_agency_count: 2
+candidates:
+  - candidate_id: contact-a1
+    agency_id: agency-a
+    agency_name: Myndighet Alfa
+    name: Anna Arkitekt
+    role_title: Chefsarkitekt
+    role_class: chief_architect
+    role_relevance: primary
+    target_relevance: domain_related
+    rationale: Ansvarar för myndighetens övergripande IT-arkitektur och är aktuell förstahandskontakt för plattformsfrågan.
+    role_status: current_verified
+    role_as_of: 2026-06-01
+    confidence: 92
+    sources:
+      - source_type: agency_official
+        title: Organisation och IT-ledning
+        url: https://example.invalid/agency-a/organisation
+        source_date: 2026-06-01
+        retrieved_date: 2026-08-27
+        supports: role
+    contact_path:
+      kind: public_work_email
+      email: anna.arkitekt@example.invalid
+      phone: null
+      url: https://example.invalid/agency-a/contact/anna
+      value_source: Myndighetens officiella personsida
+      verified_public_professional: true
+      notes: Exempeldata, ej verklig person.
+    caveats: []
+  - candidate_id: contact-a2
+    agency_id: agency-a
+    agency_name: Myndighet Alfa
+    name: Per Plattform
+    role_title: Produktägare containerplattform
+    role_class: product_or_platform_owner
+    role_relevance: primary
+    target_relevance: explicit
+    rationale: Rollen är uttryckligen knuten till containerplattformen och kan vara mest relevant för produktnära frågor.
+    role_status: current_probable
+    role_as_of: 2026-02-01
+    confidence: 83
+    sources:
+      - source_type: conference_or_presentation
+        title: Plattformsteamets arbetssätt
+        url: https://example.invalid/event/platform
+        source_date: 2026-02-01
+        retrieved_date: 2026-08-27
+        supports: target_relevance
+    contact_path:
+      kind: agency_switchboard
+      email: null
+      phone: 010-000 00 00
+      url: https://example.invalid/agency-a/contact
+      value_source: Myndighetens officiella kontaktsida
+      verified_public_professional: true
+      notes: Be växeln koppla till produktägare för containerplattform.
+    caveats:
+      - Aktuell roll bör helst verifieras i ytterligare källa.
+  - candidate_id: contact-b1
+    agency_id: agency-b
+    agency_name: Myndighet Beta
+    name: Före Detta
+    role_title: IT-arkitekt
+    role_class: it_architect
+    role_relevance: strong
+    target_relevance: domain_related
+    rationale: Historiskt relevant men har lämnat myndigheten.
+    role_status: former
+    role_as_of: 2023-01-01
+    confidence: 98
+    sources:
+      - source_type: professional_profile
+        title: Offentlig yrkesprofil
+        url: https://example.invalid/profile/former
+        source_date: 2026-01-01
+        retrieved_date: 2026-08-27
+        supports: agency_employment
+    contact_path:
+      kind: none_found
+      email: null
+      phone: null
+      url: null
+      value_source: Ingen
+      verified_public_professional: false
+      notes: null
+    caveats:
+      - Personen är inte en aktuell kontakt.
+fallbacks:
+  - agency_id: agency-b
+    agency_name: Myndighet Beta
+    contact_path:
+      kind: agency_switchboard
+      phone: 010-111 11 11
+      value_source: Myndighetens officiella kontaktsida
+      verified_public_professional: true

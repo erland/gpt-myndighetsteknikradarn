@@ -1,0 +1,36 @@
+schema_version: 1
+snapshot_date: 2026-08-27
+purpose: Tidsstämplade seed-källor för svensk teknikresearch. Listan ska verifieras vid framtida breda körningar.
+procurement:
+  authoritative_context:
+  - name: Upphandlingsmyndigheten
+    url: https://www.upphandlingsmyndigheten.se/
+    notes: Statistikmyndighet på upphandlingsområdet och källa till information om annonsering och annonsdatabaser.
+  - name: Konkurrensverket
+    url: https://www.konkurrensverket.se/
+    notes: Register- och tillsynsmyndighet för registrerade annonsdatabaser.
+  cross_border:
+  - name: TED
+    url: https://ted.europa.eu/
+    notes: EU:s gemensamma annonsdatabas; relevant framför allt för annonser över tröskelvärden.
+  swedish_registered_seed_set_2026:
+  - Mercell Annonsdatabas
+  - e-Avrop
+  - KommersAnnons.se
+  - Clira Annonsdatabas
+  - Konstpool
+  central_frameworks:
+  - name: Avropa / Statens inköpscentral
+    url: https://www.avropa.se/
+    notes: Ramavtal är discovery-källa; ett centralt ramavtal är inte myndighetsspecifikt användningsbevis utan avrop eller annan koppling.
+research_source_families:
+- agency_official
+- agency_public_code
+- procurement
+- job_ads
+- professional_profiles
+- conferences_and_presentations
+- vendor_cases
+- industry_press
+- broad_web
+freshness_rule: Verifiera seed-listor och aktiva tjänster när analystidpunkten ligger väsentligt efter snapshot_date.

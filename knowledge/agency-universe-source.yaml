@@ -1,0 +1,21 @@
+schema_version: 1
+knowledge_item: scb_agency_registry_reference
+purpose: Referensmetadata för den myndighetskälla som ska användas för att skapa aktuellt analysuniversum.
+source:
+  publisher: Statistiska centralbyrån (SCB)
+  title: Allmänna myndighetsregistret
+  url: https://myndighetsregistret.scb.se/
+  information_url: https://www.scb.se/vara-tjanster/oppna-data/myndighetsregistret/
+  update_frequency: weekly
+  legal_basis: Förordning (2007:755) om det allmänna myndighetsregistret
+reference_observation:
+  retrieved_date: 2026-08-27
+  total: 449
+  group_counts:
+    statliga_forvaltningsmyndigheter: 244
+    myndigheter_under_riksdagen: 5
+    statliga_affarsverk: 3
+    ap_fonder: 6
+    domstolar_och_domstolsverket: 83
+    svenska_utlandsmyndigheter: 108
+usage_rule: Detta är ett utvecklingssnapshot, inte en evig masterlista. Runtime ska hämta aktuell registerinformation när färsk full täckning behövs.

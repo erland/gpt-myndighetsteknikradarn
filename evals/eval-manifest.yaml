@@ -1,0 +1,41 @@
+schema_version: 1
+suite: step12-realistic-behavioral-evals
+profile: workflow_research_heavy
+fixture_policy: synthetic_only
+case_count: 18
+automated_count: 14
+manual_count: 4
+critical_cases:
+  - EVAL-001
+  - EVAL-002
+  - EVAL-003
+  - EVAL-005
+  - EVAL-006
+  - EVAL-008
+  - EVAL-009
+  - EVAL-011
+  - EVAL-012
+  - EVAL-014
+  - EVAL-015
+  - EVAL-016
+  - EVAL-017
+manual_runtime_cases:
+  - EVAL-010
+  - EVAL-011
+  - EVAL-012
+  - EVAL-018
+coverage:
+  technology_normalization: [EVAL-002]
+  procurement_interpretation: [EVAL-003, EVAL-004]
+  job_ad_interpretation: [EVAL-005, EVAL-006, EVAL-007]
+  freshness_and_history: [EVAL-008]
+  contradiction_and_decommission: [EVAL-009, EVAL-018]
+  vendor_source_bias: [EVAL-010]
+  negative_search_semantics: [EVAL-011]
+  partial_coverage: [EVAL-012]
+  contact_research: [EVAL-013, EVAL-014, EVAL-015]
+  export_parity: [EVAL-016]
+  multipass_resume: [EVAL-017]
+release_rule:
+  critical_automated_failure_blocks_release: true
+  manual_cases_must_be_run_for_runtime_release: true

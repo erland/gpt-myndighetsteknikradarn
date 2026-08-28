@@ -1,0 +1,89 @@
+run_id: rr-openshift-demo-001
+created_at: '2026-08-27T05:00:00+02:00'
+updated_at: '2026-08-27T05:30:00+02:00'
+run_status: paused
+target_snapshot:
+  canonical_name: Red Hat OpenShift
+  target_fingerprint: target-demo-sha256
+scope_snapshot:
+  scope_profile: custom
+  registry_retrieved_date: '2026-08-27'
+  scoped_agency_ids: [agency-a, agency-b, agency-c, agency-d]
+  scope_fingerprint: scope-demo-sha256
+pass_plan:
+  required_passes: [screen, deepen, verify, negative_control, synthesize]
+  optional_passes: []
+  negative_control_required_for_no_trace: true
+agency_states:
+  - agency_id: agency-a
+    agency_name: Myndighet Alfa
+    ordinal: 1
+    process_status: completed
+    passes:
+      screen: {status: complete, attempts: 1, started_at: null, completed_at: null, notes: []}
+      deepen: {status: complete, attempts: 1, started_at: null, completed_at: null, notes: []}
+      verify: {status: complete, attempts: 1, started_at: null, completed_at: null, notes: []}
+      negative_control: {status: not_required, attempts: 0, started_at: null, completed_at: null, notes: []}
+      synthesize: {status: complete, attempts: 1, started_at: null, completed_at: null, notes: []}
+    evidence_refs: [ev-a1]
+    assessment_ref: as-a
+    outcome: likely_or_confirmed
+    revisit: {required: false, reasons: []}
+    last_error: null
+  - agency_id: agency-b
+    agency_name: Myndighet Beta
+    ordinal: 2
+    process_status: in_progress
+    passes:
+      screen: {status: complete, attempts: 1, started_at: null, completed_at: null, notes: []}
+      deepen: {status: in_progress, attempts: 1, started_at: null, completed_at: null, notes: []}
+      verify: {status: pending, attempts: 0, started_at: null, completed_at: null, notes: []}
+      negative_control: {status: not_required, attempts: 0, started_at: null, completed_at: null, notes: []}
+      synthesize: {status: pending, attempts: 0, started_at: null, completed_at: null, notes: []}
+    evidence_refs: [ev-b1]
+    assessment_ref: null
+    outcome: null
+    revisit: {required: false, reasons: []}
+    last_error: null
+  - agency_id: agency-c
+    agency_name: Myndighet Gamma
+    ordinal: 3
+    process_status: screened
+    passes:
+      screen: {status: complete, attempts: 1, started_at: null, completed_at: null, notes: []}
+      deepen: {status: not_required, attempts: 0, started_at: null, completed_at: null, notes: []}
+      verify: {status: not_required, attempts: 0, started_at: null, completed_at: null, notes: []}
+      negative_control: {status: pending, attempts: 0, started_at: null, completed_at: null, notes: []}
+      synthesize: {status: pending, attempts: 0, started_at: null, completed_at: null, notes: []}
+    evidence_refs: []
+    assessment_ref: null
+    outcome: null
+    revisit: {required: false, reasons: []}
+    last_error: null
+  - agency_id: agency-d
+    agency_name: Myndighet Delta
+    ordinal: 4
+    process_status: not_started
+    passes:
+      screen: {status: pending, attempts: 0, started_at: null, completed_at: null, notes: []}
+      deepen: {status: not_required, attempts: 0, started_at: null, completed_at: null, notes: []}
+      verify: {status: not_required, attempts: 0, started_at: null, completed_at: null, notes: []}
+      negative_control: {status: not_required, attempts: 0, started_at: null, completed_at: null, notes: []}
+      synthesize: {status: pending, attempts: 0, started_at: null, completed_at: null, notes: []}
+    evidence_refs: []
+    assessment_ref: null
+    outcome: null
+    revisit: {required: false, reasons: []}
+    last_error: null
+counters:
+  scoped_agency_count: 4
+  analyzed_count: 1
+  not_analyzed_count: 3
+  likely_count: 1
+  trace_count: 0
+  no_trace_count: 0
+  unresolved_count: 0
+checkpoint_sequence: 0
+last_checkpoint_id: null
+limitations: []
+event_log: []

@@ -1,0 +1,55 @@
+schema_version: 1
+model: Agency
+purpose: Representerar en svensk statlig myndighet eller annan uttryckligen vald analysenhet i ett ResearchRun.
+identity:
+  primary_key: organization_number
+  fallback_key: source_registry_id
+  display_key: name
+fields:
+  name:
+    type: string
+    required: true
+  organization_number:
+    type: string_or_null
+    required: false
+    note: Föredragen stabil identitet när SCB anger organisationsnummer.
+  source_registry_id:
+    type: string_or_null
+    required: false
+  agency_group:
+    type: enum
+    required: true
+    values:
+      - state_administrative_authority
+      - authority_under_parliament
+      - state_business_works
+      - ap_fund
+      - court_or_court_administration
+      - foreign_mission
+      - custom_other
+  agency_subtype:
+    type: string_or_null
+    required: false
+  website:
+    type: string_or_null
+    required: false
+  active:
+    type: boolean
+    required: true
+  registry_source:
+    type: string
+    required: true
+  registry_retrieved_date:
+    type: date
+    required: true
+  aliases:
+    type: list[string]
+    required: false
+  notes:
+    type: string_or_null
+    required: false
+rules:
+  - Do not merge agencies only because their names are similar.
+  - Prefer organization_number as identity when available.
+  - Preserve the registry name and store alternative names as aliases.
+  - An inactive or reorganized agency may be retained for historical evidence but must not silently count as active in a current universe.

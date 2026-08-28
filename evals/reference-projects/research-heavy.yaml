@@ -1,0 +1,12 @@
+characteristics:
+  research_heavy: true
+  evidence_required: true
+  multi_stage_workflow: true
+  project_zip_manipulation: false
+  scripts_required: true
+  rich_structured_runtime: true
+  structured_knowledge: true
+  repeatable_outputs: true
+  moderate_workflow: false
+expected:
+  profile: workflow_research_heavy

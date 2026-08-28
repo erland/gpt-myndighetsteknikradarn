@@ -1,0 +1,16 @@
+id: EVAL-005
+title: Återpublicerad jobbannons ger inte dubbelt belägg
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: scoring_scenario
+  fixture: duplicate_job_ads
+expected:
+  required:
+  - additional_independent_bonus=0
+  - en claim-grupp
+  forbidden:
+  - två oberoende jobbannonsbelägg
+scoring:
+  pass_threshold: 1.0

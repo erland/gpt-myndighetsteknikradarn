@@ -1,0 +1,12 @@
+id: blank-idea-001
+name: Research-heavy GPT profile selection
+features:
+  research_heavy: true
+  evidence_required: true
+  multi_stage_workflow: true
+  structured_knowledge: true
+  repeatable_outputs: true
+  scripts_required: true
+  rich_structured_runtime: true
+expected:
+  profile: workflow_research_heavy

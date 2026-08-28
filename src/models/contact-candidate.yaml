@@ -1,0 +1,98 @@
+schema_version: 1
+model: ContactCandidate
+purpose: Canonical modell för en potentiell professionell kontaktperson vid en myndighet efter genomförd teknik-/produktkartläggning.
+required_fields:
+  - candidate_id
+  - agency_id
+  - name
+  - role_title
+  - role_class
+  - role_relevance
+  - role_status
+  - confidence
+  - sources
+  - contact_path
+fields:
+  candidate_id:
+    type: string
+    description: Stabil identifierare inom aktuell ContactResearchRun.
+  agency_id:
+    type: string
+  agency_name:
+    type: string
+  name:
+    type: string
+  role_title:
+    type: string
+    description: Rollen så som den anges i källan, utan omskrivning som överdriver ansvar.
+  role_class:
+    type: enum
+    values:
+      - chief_architect
+      - enterprise_architect
+      - it_architect
+      - solution_architect
+      - platform_architect
+      - infrastructure_architect
+      - product_or_platform_owner
+      - technology_domain_lead
+      - cio_or_it_director
+      - digitalization_director
+      - other_relevant_professional
+  role_relevance:
+    type: enum
+    values: [primary, strong, useful, fallback]
+  target_relevance:
+    type: enum
+    values: [explicit, domain_related, general_it, unknown]
+  rationale:
+    type: string
+    description: Kort förklaring till varför kandidaten är relevant för just frågan.
+  role_status:
+    type: enum
+    values: [current_verified, current_probable, stale_or_uncertain, former, unresolved]
+  role_as_of:
+    type: date_or_null
+  confidence:
+    type: integer_0_100
+    description: Säkerhetsvärde för kandidatens aktuella roll/relevans; inte sannolikhetsprocent.
+  sources:
+    type: array
+    item:
+      fields:
+        source_type: string
+        title: string
+        url: url_or_null
+        source_date: date_or_null
+        retrieved_date: date_or_null
+        supports: enum[identity, agency_employment, role, target_relevance, direct_contact, switchboard]
+  contact_path:
+    type: object
+    required: [kind, value_source]
+    fields:
+      kind:
+        type: enum
+        values: [public_work_email, public_work_phone, agency_switchboard, agency_contact_form, agency_general_email, none_found]
+      email:
+        type: string_or_null
+      phone:
+        type: string_or_null
+      url:
+        type: url_or_null
+      value_source:
+        type: string
+      verified_public_professional:
+        type: boolean
+      notes:
+        type: string_or_null
+  caveats:
+    type: array_of_string
+  excluded_reason:
+    type: string_or_null
+invariants:
+  - En ContactCandidate får endast avse en identifierbar person i professionell roll.
+  - former får inte presenteras som rekommenderad aktuell kontakt.
+  - public_work_email och public_work_phone får endast användas när uppgiften uttryckligen publicerats i professionellt sammanhang.
+  - E-postadress eller telefonnummer får aldrig konstrueras, extrapoleras eller gissas.
+  - Om direkt professionell kontaktuppgift saknas ska officiell myndighetskontakt prioriteras som fallback.
+  - confidence beskriver säkerheten i aktuell roll och relevans, inte personens kompetens eller en statistisk sannolikhet.

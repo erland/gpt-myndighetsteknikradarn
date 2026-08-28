@@ -1,0 +1,94 @@
+schema_version: 1
+workflow: adaptive_source_search
+purpose: Adaptiv sökplan som kombinerar hög täckning i screening med källspecifik fördjupning.
+query_variables:
+  agency_name: obligatorisk
+  agency_domain: valfri
+  exact_terms: från TechnologyTarget.search_terms.exact
+  expansion_terms: från TechnologyTarget.search_terms.expansion
+  disambiguation_terms: från TechnologyTarget.search_terms.disambiguation
+  negative_terms: från TechnologyTarget.search_terms.negative
+principles:
+- exact_terms_before_expansion_terms
+- agency_specific_queries
+- original_sources_before_aggregators
+- one_source_hit_does_not_equal_one_independent_evidence_item
+- adaptive_depth_instead_of_full_search_for_every_agency
+- preserve_query_and_source_type_for_traceability
+stages:
+  screen:
+    objective: Hitta högsignalsindikatorer med begränsad sökkostnad.
+    minimum_query_families:
+    - agency_plus_exact_target
+    - agency_site_exact_target_when_domain_known
+    query_templates:
+      agency_plus_exact_target:
+      - '"{agency_name}" "{term}"'
+      agency_site_exact_target:
+      - 'site:{agency_domain} "{term}"'
+      agency_plus_exact_context:
+      - '"{agency_name}" "{term}" IT'
+      - '"{agency_name}" "{term}" drift OR plattform OR arkitektur'
+    escalation:
+      positive_candidate: deepen
+      ambiguous: deepen
+      no_trace_yet: alternate_screen_or_negative_control
+  deepen:
+    objective: Sök källfamiljer som kan förklara vad träffen faktiskt betyder.
+    query_families:
+      official:
+      - 'site:{agency_domain} "{term}"'
+      - 'site:{agency_domain} "{term}" filetype:pdf'
+      public_code:
+      - '"{agency_name}" "{term}" GitHub OR GitLab'
+      procurement:
+      - '"{agency_name}" "{term}" upphandling OR avtal OR avrop'
+      - '"{agency_name}" "{term}" tilldelning OR efterannons'
+      - '"{agency_name}" "{term}" RFI OR marknadsdialog'
+      jobs:
+      - '"{agency_name}" "{term}" jobb OR "lediga jobb"'
+      - 'site:{agency_domain} "{term}" jobb OR karriär'
+      professional:
+      - '"{agency_name}" "{term}" arkitekt OR engineer OR utvecklare'
+      vendor:
+      - '"{agency_name}" "{term}" kundcase OR customer OR reference'
+      press:
+      - '"{agency_name}" "{term}" "Computer Sweden" OR "Ny Teknik"'
+    expansion_rule: Expansionstermer får användas för discovery men träffar ska klassificeras enligt TechnologyTarget.match_class innan de räknas som produktevidens.
+  verify:
+    objective: Verifiera de källor som påverkar slutbedömningen mest.
+    actions:
+    - open_original_source
+    - verify_agency_identity
+    - verify_target_match_class
+    - verify_date_and_validity
+    - classify_usage_semantics
+    - seek_independent_support_when_material
+    - search_for_migration_or_decommission_when_evidence_is_old
+  negative_control:
+    objective: Minska falska negativa resultat med alternativa termer och källvägar.
+    query_families:
+    - aliases_not_used_in_first_screen
+    - product_family_as_discovery_only
+    - procurement_specific_search
+    - jobs_specific_search
+    - migration_history_search
+    rules:
+    - never_claim_non_use_from_no_results
+    - record_negative_control_status
+source_waterfall:
+- agency_official
+- agency_public_code
+- procurement_notice
+- procurement_rfi
+- procurement_award
+- procurement_contract_or_calloff
+- framework_agreement
+- job_ad_official
+- conference_or_presentation
+- professional_profile
+- vendor_customer_case
+- industry_press
+- job_ad_aggregator
+- other_web
+- search_result_snippet

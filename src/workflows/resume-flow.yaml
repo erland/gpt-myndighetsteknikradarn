@@ -1,0 +1,45 @@
+schema_version: 1
+workflow: resume_research_run
+purpose: Validera och fortsätta en tidigare checkpointad ResearchRun.
+steps:
+  - id: load
+    order: 1
+    action: load_latest_available_checkpoint
+    fallback: previous_valid_checkpoint
+  - id: validate
+    order: 2
+    checks:
+      - schema_supported
+      - state_fingerprint_valid
+      - run_id_consistent
+      - target_fingerprint_unchanged
+      - scope_fingerprint_unchanged
+      - agency_membership_exact
+      - counters_reconcile
+  - id: rebuild
+    order: 3
+    action:
+      - derive_counters_from_agency_states
+      - derive_next_work_from_agency_states
+      - ignore_stale_cached_cursor
+  - id: continue_interrupted
+    order: 4
+    priority:
+      - incomplete_in_progress_passes
+      - revisit_required
+  - id: continue_planned_work
+    order: 5
+    priority:
+      - screen_not_started_by_ordinal
+      - deepen_candidates
+      - verify_material_evidence
+      - negative_control_required
+      - synthesize_ready
+  - id: checkpoint
+    order: 6
+    action: write_new_checkpoint_after_batch
+invariants:
+  - completed agencies are skipped unless revisit.required is true
+  - evidence refs are set-like and idempotent
+  - counters are derived, never trusted blindly
+  - partial result must be checkpointed before presentation

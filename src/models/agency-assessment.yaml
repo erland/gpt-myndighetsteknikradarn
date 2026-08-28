@@ -1,0 +1,65 @@
+schema_version: 1
+model: AgencyAssessment
+purpose: Reproducerbar sammanvägning av deduplicerad evidens till en myndighetsspecifik bedömning av sannolik aktuell användning.
+required_fields:
+  - agency_id
+  - technology_target_id
+  - assessment_status
+  - score
+  - evidence_level
+  - display_category
+  - rationale
+  - evidence_ids
+fields:
+  agency_id: {type: string}
+  technology_target_id: {type: string}
+  assessment_status:
+    type: enum
+    values: [assessed, unresolved, not_analyzed]
+  score:
+    type: integer
+    range: [0, 100]
+    description: Reproducerbart säkerhetsvärde enligt scoring-policy. Är inte en statistisk sannolikhet.
+  evidence_level:
+    type: enum
+    values:
+      - level_5_direct_confirmed
+      - level_4_very_strong
+      - level_3_likely
+      - level_2_trace
+      - level_1_weak_trace
+      - level_0_no_relevant_evidence
+      - unresolved
+  display_category:
+    type: enum
+    values: [likely_or_confirmed, trace, no_trace_found, unresolved, not_analyzed]
+  rationale:
+    type: string
+    description: Kort förklaring som nämner viktigaste positiva och eventuella negativa belägg samt osäkerhet.
+  evidence_ids: {type: array_of_string}
+  counted_claim_groups:
+    type: array_of_string
+    description: Deduplicerade claim-grupper som faktiskt påverkat score.
+  independent_source_types: {type: array_of_string}
+  latest_positive_evidence_date: {type: date_or_null}
+  latest_negative_evidence_date: {type: date_or_null}
+  score_breakdown:
+    type: object
+    fields:
+      strongest_positive: integer
+      additional_independent_bonus: integer
+      freshness_adjustment: integer
+      verification_adjustment: integer
+      contradiction_penalty: integer
+      match_cap_applied: boolean
+      discovery_cap_applied: boolean
+  caveats: {type: array_of_string}
+  assessed_at: {type: date}
+invariants:
+  - score är ett evidensbaserat säkerhetsvärde och får inte beskrivas som statistisk sannolikhet.
+  - endast deduplicerade claim-grupper får bidra som oberoende positiva belägg.
+  - derivative_same_claim får inte ge independent corroboration-bonus.
+  - family_only, component_only, underlying_technology_only och related_not_equivalent får inte ensamma ge likely_or_confirmed för en specifik produkt.
+  - discovery_only får inte ensamt ge högre nivå än level_1_weak_trace.
+  - decommission_or_replacement måste kunna sänka aktuell användningsbedömning även när äldre positiva belägg finns.
+  - no_trace_found får endast användas när myndigheten faktiskt analyserats enligt coverage-policy.

@@ -1,0 +1,28 @@
+schema_version: 1
+model: ExportBundle
+purpose: Gemensamt exportkontrakt för analysresultat och valfri kontaktpersonsanalys.
+required_fields:
+  - analysis
+  - generated_at
+fields:
+  analysis:
+    type: ResultPresentation
+    description: Samma strukturerade analysresultat som används i chattpresentationen.
+  contacts:
+    type: ContactResearchRun_or_null
+    description: Valfri kontaktpersonsanalys. Får inte krävas för att exportera teknikresultatet.
+  generated_at:
+    type: datetime
+  requested_formats:
+    type: array
+    values: [markdown, pdf, confluence_markup]
+  title_override:
+    type: string_or_null
+  provenance_note:
+    type: string
+invariants:
+  - Export får inte skapa eller förstärka sakpåståenden som saknas i analysis eller contacts.
+  - Samma coverage-räknare och säkerhetsvärden ska användas i alla format.
+  - Kontaktuppgifter får endast återges enligt contact-person-research-policyn.
+  - Alla format ska märka partial respektive complete på samma sätt.
+  - Exportdatum ska vara separat från källdatum och analystäckning.

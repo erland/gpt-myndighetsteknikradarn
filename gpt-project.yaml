@@ -1,0 +1,136 @@
+schema_version: 1
+project:
+  id: myndighetsteknikradarn
+  name: Myndighetsteknikradarn
+  description: GPT för evidensbaserad kartläggning av vilka svenska myndigheter som sannolikt använder
+    en viss teknologi eller produkt samt för efterföljande identifiering av relevanta professionella kontaktpersoner.
+  version: 1.0.0
+  language: sv
+profile:
+  selected: workflow_research_heavy
+  features:
+    research_heavy: true
+    evidence_required: true
+    multi_stage_workflow: true
+    structured_knowledge: true
+    repeatable_outputs: true
+    scripts_required: true
+    rich_structured_runtime: true
+instructions:
+  canonical: src/instructions/canonical.md
+architecture:
+  target_model: src/models/target-model.yaml
+  design: docs/target-architecture.md
+  research_workflow: src/workflows/research-flow.yaml
+  technology_target_model: src/models/technology-target.yaml
+  agency_model: src/models/agency.yaml
+  agency_universe_model: src/models/agency-universe.yaml
+  source_type_model: src/models/source-type.yaml
+  search_plans: src/workflows/search-plans.yaml
+  evidence_model: src/models/evidence.yaml
+  agency_assessment_model: src/models/agency-assessment.yaml
+  result_presentation_model: src/models/result-presentation.yaml
+  result_template: src/templates/research-result.md
+  contact_candidate_model: src/models/contact-candidate.yaml
+  contact_research_run_model: src/models/contact-research-run.yaml
+  contact_research_workflow: src/workflows/contact-research-flow.yaml
+  contact_result_template: src/templates/contact-result.md
+  export_bundle_model: src/models/export-bundle.yaml
+  export_policy: src/policies/export-formats.md
+  export_script: scripts/export_report.py
+  research_run_model: src/models/research-run.yaml
+  research_checkpoint_model: src/models/research-checkpoint.yaml
+  resume_workflow: src/workflows/resume-flow.yaml
+  eval_documentation: docs/evals-and-realistic-test-cases.md
+knowledge_architecture:
+  canonical_root: knowledge
+  source_landscape: knowledge/source-landscape.yaml
+runtime:
+  primary: chat_zip
+  chat_zip:
+    enabled: true
+    start_here_template: src/templates/START-HERE.chat.md.tpl
+    builder: scripts/build_chat_runtime.py
+    entrypoint: START-HERE.md
+    include_workflows: true
+    exclude_scripts:
+    - run_evals.py
+    - build_chat_runtime.py
+  custom_gpt:
+    enabled: true
+    instruction:
+      mode: compiled
+      max_characters: 8000
+    knowledge:
+      max_files: 20
+      strategy: compiled
+    builder:
+      instructions: build/custom-gpt/builder/instructions.md
+      conversation_starters: build/custom-gpt/builder/conversation-starters.md
+      capabilities: build/custom-gpt/builder/capabilities.md
+      knowledge_package: build/custom-gpt/builder/knowledge-package
+    instructions_source: src/instructions/custom-gpt.md
+    parity_document: docs/custom-gpt-parity.md
+    required_capabilities:
+    - web_search
+    - code_interpreter_or_data_analysis
+    role: secondary
+    build_script: scripts/build_custom_gpt_runtime.py
+    compatibility:
+      report_required: true
+      parity_symbols:
+        equivalent: equivalent
+        reduced: reduced
+        missing: missing
+    validation:
+      block_on_instruction_limit: true
+      block_on_knowledge_limit: true
+      block_on_misleading_core_functionality: true
+exports:
+  markdown: true
+  pdf: true
+  confluence_markup: true
+testing:
+  planned: false
+  regression_tests: tests
+  behavioral_evals: evals/cases
+  eval_manifest: evals/eval-manifest.yaml
+  automated_eval_runner: scripts/run_evals.py
+  manual_eval_rubric: evals/manual/RUBRIC.md
+  critical_eval_failure_blocks_release: true
+release:
+  github:
+    enabled: false
+policies:
+  research_workflow: src/policies/research-workflow.md
+  technology_normalization: src/policies/technology-normalization.md
+  agency_universe: src/policies/agency-universe.md
+  coverage_accounting: src/policies/coverage-accounting.md
+  source_strategy: src/policies/source-strategy.md
+  evidence_and_deduplication: src/policies/evidence-and-deduplication.md
+  scoring_and_confidence: src/policies/scoring-and-confidence.md
+  result_presentation: src/policies/result-presentation.md
+  contact_person_research: src/policies/contact-person-research.md
+  export_formats: src/policies/export-formats.md
+  multipass_resume: src/policies/multipass-resume.md
+structure:
+  conversation_starters:
+    path: src/conversation-starters
+  runtime_policy:
+    path: src/policies
+  schemas:
+    path: src/models
+  scripts:
+    path: scripts
+  templates:
+    path: src/templates
+  workflows:
+    path: src/workflows
+release_validation:
+  architecture_contract: architecture.yaml
+  custom_gpt_system_instruction: src/instructions/system.md
+  blank_idea_e2e: evals/e2e/blank-idea-001.yaml
+  lint_script: scripts/lint_gpt_project.py
+  hygiene_script: scripts/project_hygiene.py
+  distribution_validator: scripts/validate_distributions.py
+  stable_release_document: docs/stable-release.md

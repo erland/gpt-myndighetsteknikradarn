@@ -1,0 +1,15 @@
+id: EVAL-014
+title: Tidigare anställd ska inte rekommenderas som aktuell kontakt
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: contact_scenario
+  fixture: former_architect
+expected:
+  required:
+  - tidigare anställd exkluderas från rekommenderad lista
+  forbidden:
+  - rekommenderad aktuell kontakt=Före Detta
+scoring:
+  pass_threshold: 1.0

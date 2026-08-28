@@ -1,0 +1,17 @@
+id: EVAL-009
+title: Ny avvecklingskälla väger ned äldre användningsbelägg
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: scoring_scenario
+  fixture: newer_decommission
+expected:
+  required:
+  - contradiction_penalty>=35
+  - score<55
+  - nyare avveckling bevaras som motsägande evidens
+  forbidden:
+  - obegränsad positiv scoring
+scoring:
+  pass_threshold: 1.0

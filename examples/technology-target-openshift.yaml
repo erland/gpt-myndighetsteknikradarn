@@ -1,0 +1,44 @@
+schema_version: 1
+technology_target:
+  canonical_name: Red Hat OpenShift Container Platform
+  target_kind: product
+  vendor: Red Hat
+  aliases:
+    - term: OpenShift
+      alias_type: common_name
+      notes: Direkt alias endast i kontext där Red Hat-produkten är entydig.
+    - term: OCP
+      alias_type: abbreviation
+      notes: Kräver tydlig OpenShift/Red Hat-kontext.
+  product_family:
+    name: Red Hat OpenShift
+    relationship: member_of
+  versions_editions:
+    - term: OpenShift Container Platform 4
+      relationship: version_of_target
+  underlying_technologies:
+    - term: Kubernetes
+      relationship: underlying_technology
+  related_but_not_equivalent_terms:
+    - term: Rancher
+      relationship: competitor
+      notes: Kubernetes management-plattform men inte OpenShift.
+    - term: Red Hat OpenShift Dedicated
+      relationship: adjacent_technology
+      notes: Separat managed offering; ska inte automatiskt räknas som OCP.
+  exclusions:
+    - term: OCP
+      reason: Förkortningen har flera betydelser utanför tydlig OpenShift-kontext.
+  ambiguity_notes:
+    - OpenShift kan förekomma som familjenamn; kontrollera att källan avser rätt erbjudande.
+  search_terms:
+    exact:
+      - '"Red Hat OpenShift Container Platform"'
+      - '"OpenShift Container Platform"'
+    expansion:
+      - 'OpenShift'
+      - 'OCP Kubernetes Red Hat'
+    disambiguation:
+      - 'Red Hat OpenShift'
+      - 'OpenShift Container Platform'
+    negative_terms: []

@@ -1,0 +1,17 @@
+id: EVAL-003
+title: RFI visar avsikt men inte användning
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: scoring_scenario
+  fixture: rfi_only
+expected:
+  required:
+  - display_category=trace
+  - score<=29
+  - RFI får inte ensam nå trolig
+  forbidden:
+  - bekräftad användning
+scoring:
+  pass_threshold: 1.0

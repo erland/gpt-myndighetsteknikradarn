@@ -1,0 +1,56 @@
+schema_version: 1
+project:
+  id: myndighetsteknikradarn
+  name: Myndighetsteknikradarn
+plan:
+  path: docs/development-plan.md
+  total_steps: 15
+progress:
+  current_phase: Stabil release och maintenance
+  current_step: 15
+  last_completed_step: 15
+  completed_steps:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  - 12
+  - 13
+  - 14
+  - 15
+  skipped_steps: []
+  inserted_steps: []
+state:
+  overall: pass
+  blocking_issues: []
+  warnings:
+  - Custom GPT har hög metodparitet men reducerad determinism för scriptstödd scoring/coverage/checkpointing;
+    PDF kräver dataanalys/kodexekvering.
+next_step:
+  recommended: null
+  title: Maintenance
+  reason: Stabil version 1.0.0 är godkänd efter RC-provning i faktisk användning. Vidare arbete sker som
+    underhåll eller ny funktionsversion.
+resume:
+  supported: true
+  required_files:
+  - gpt-project.yaml
+  - project-status.yaml
+  - docs/development-plan.md
+  - STATUS.md
+  - PROJECT.md
+  human_readable_status: Version 1.0.0 är stabil och projektet är i maintenance mode. Alla 15 utvecklingssteg
+    är genomförda och RC:n har provats i faktisk användning utan blockerande problem.
+release:
+  state: stable
+  version: 1.0.0
+  promoted_from: 1.0.0-rc.1
+  runtime_smoke_test: passed
+  maintenance_mode: true

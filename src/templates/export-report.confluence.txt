@@ -1,0 +1,39 @@
+h1. {{target_name}} – svenska myndigheter
+
+{{status_block}}
+
+h2. Sammanfattning
+
+||Mått||Antal||
+{{coverage_rows}}
+
+{info}"Inga relevanta spår hittades" betyder att analysen inte hittade tillräckliga belägg. Det bevisar inte att tekniken saknas.{info}
+
+h2. Myndigheter med belägg
+
+||Myndighet||Bedömning||Säkerhetsvärde||Evidenssammanfattning||Källtyper||Senaste relevanta belägg||
+{{ranked_rows}}
+
+{{unresolved_section}}
+
+h2. Evidens och källor
+
+{{evidence_details}}
+
+h2. Källtyper i underlaget
+
+{{source_type_summary}}
+
+h2. Metod i korthet
+
+{{methodology_note}}
+
+h2. Begränsningar
+
+{{limitations}}
+
+{{contact_section}}
+
+h2. Exportmetadata
+
+{{export_metadata}}

@@ -1,0 +1,17 @@
+id: EVAL-013
+title: Relevant aktuell arkitekt med växelfallback
+criticality: important
+profiles:
+- workflow_research_heavy
+input:
+  kind: contact_scenario
+  fixture: current_architect_switchboard
+expected:
+  required:
+  - aktuell arkitekt rankas
+  - myndighetens växel används
+  - ingen gissad direktuppgift
+  forbidden:
+  - konstruerad e-post
+scoring:
+  pass_threshold: 1.0

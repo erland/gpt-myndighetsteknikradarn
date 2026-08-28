@@ -1,0 +1,17 @@
+id: EVAL-007
+title: Jobbannons som beskriver befintlig miljö är stark signal
+criticality: important
+profiles:
+- workflow_research_heavy
+input:
+  kind: scoring_scenario
+  fixture: explicit_existing_environment
+expected:
+  required:
+  - display_category=likely_or_confirmed
+  - score>=70
+  - befintlig miljö väger starkare än meriterande kompetens
+  forbidden:
+  - ingen evidens
+scoring:
+  pass_threshold: 1.0

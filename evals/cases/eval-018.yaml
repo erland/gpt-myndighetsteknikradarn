@@ -1,0 +1,20 @@
+id: EVAL-018
+title: Motsägande och osäker evidens ska redovisas öppet
+criticality: important
+profiles:
+- workflow_research_heavy
+input:
+  kind: manual_response
+  prompt: En testmyndighet har ett äldre officiellt belägg för IBM MQ och en nyare
+    officiell källa om avveckling. Förklara bedömningen.
+expected:
+  required:
+  - båda källorna redovisas
+  - nyare avveckling väger tungt
+  - aktuell användning uttrycks försiktigt
+  - datum framgår
+  forbidden:
+  - ignorera avvecklingskällan
+  - bekräftad aktuell användning utan caveat
+scoring:
+  pass_threshold: 0.9

@@ -1,0 +1,106 @@
+schema_version: 1
+model: ResultPresentation
+purpose: Canonical presentationskontrakt för ett ResearchRun, med kort översikt och
+  full spårbarhet utan att blanda täckning med evidensstyrka.
+required_fields:
+- target
+- run_status
+- coverage
+- ranked_assessments
+- methodology_note
+- limitations
+fields:
+  target:
+    type: object
+    required:
+    - canonical_name
+  run_status:
+    type: enum
+    values:
+    - partial
+    - complete
+  scope:
+    type: object
+    fields:
+      profile: string
+      snapshot_date: date_or_null
+      exclusions: array_of_string
+  coverage:
+    type: object
+    required:
+    - scoped_agency_count
+    - analyzed_count
+    - likely_count
+    - trace_count
+    - no_trace_count
+    - unresolved_count
+    - not_analyzed_count
+  ranked_assessments:
+    type: array
+    item: AgencyAssessmentSummary
+    sort: score_desc_then_evidence_recency_desc_then_agency_name_asc
+  source_type_summary:
+    type: array
+    item:
+      fields:
+        source_type: string
+        agencies_supported: integer
+        evidence_items: integer
+  methodology_note:
+    type: string
+  limitations:
+    type: array_of_string
+  next_actions:
+    type: array_of_string
+  evidence_details:
+    type: array
+    item:
+      fields:
+        evidence_id: string
+        agency_id: string
+        source_type: string
+        source_title: string
+        source_url: url_or_null
+        source_date: date_or_null
+        directness: string
+        summary: string
+        caveats: array_of_string
+AgencyAssessmentSummary:
+  required_fields:
+  - agency_name
+  - display_category
+  - evidence_level
+  - score
+  - rationale
+  - source_types
+  fields:
+    agency_id: string
+    agency_name: string
+    display_category: enum[likely_or_confirmed, trace, no_trace_found, unresolved]
+    evidence_level: string
+    score: integer_0_100
+    rationale: string
+    source_types: array_of_string
+    latest_relevant_evidence_date: date_or_null
+    evidence_refs: array_of_string
+    caveats: array_of_string
+presentation_order:
+- heading_and_status
+- summary_counts
+- ranked_positive_agencies
+- unresolved_if_any
+- evidence_and_sources
+- source_type_summary
+- methodology_note
+- limitations
+- next_actions
+invariants:
+- scoped_agency_count = analyzed_count + not_analyzed_count
+- analyzed_count = likely_count + trace_count + no_trace_count + unresolved_count
+- not_analyzed_count får aldrig ingå i no_trace_count
+- ranked_positive_agencies innehåller endast likely_or_confirmed och trace
+- ranked_positive_agencies sorteras säkrast först enligt canonical sorteringsnyckel
+- score får inte etiketteras eller beskrivas som sannolikhetsprocent
+- complete får endast användas när not_analyzed_count = 0 och planerade obligatoriska
+  researchpass är avslutade
+- partial måste synligt märkas som delresultat och ange återstående myndigheter

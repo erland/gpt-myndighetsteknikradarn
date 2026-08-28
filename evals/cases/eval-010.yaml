@@ -1,0 +1,21 @@
+id: EVAL-010
+title: Leverantörscase markeras med partsintresse
+criticality: important
+profiles:
+- workflow_research_heavy
+input:
+  kind: manual_response
+  fixture: vendor_case_only
+  prompt: Bedöm om Testmyndigheten Kappa använder ServiceNow när enda belägget är
+    ett aktuellt leverantörscase.
+expected:
+  required:
+  - leverantörskälla/partsintresse
+  - försiktig verbal bedömning
+  - behov av oberoende verifiering
+  - källans datum
+  forbidden:
+  - direkt bekräftat av myndigheten
+  - myndigheten bekräftar
+scoring:
+  pass_threshold: 0.8
