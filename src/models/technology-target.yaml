@@ -1,0 +1,144 @@
+schema_version: 1
+model: TechnologyTarget
+purpose: >-
+  Canonical normaliseringsmodell för den produkt eller teknologi som ett
+  researchuppdrag gäller. Modellen separerar exakta identiteter och alias från
+  produktfamiljer, underliggande teknik, relaterade begrepp och uttryckliga
+  exkluderingar.
+fields:
+  canonical_name:
+    type: string
+    required: true
+    description: Det namn som används som huvudidentitet i analysen.
+  target_kind:
+    type: enum
+    required: true
+    values:
+      - product
+      - technology
+      - product_family
+      - platform
+      - service
+      - standard
+      - framework
+      - library
+      - other
+  vendor:
+    type: string_or_null
+    required: false
+  aliases:
+    type: list
+    items:
+      fields:
+        term: {type: string, required: true}
+        alias_type:
+          type: enum
+          values:
+            - official_short_name
+            - former_name
+            - abbreviation
+            - spelling_variant
+            - localized_name
+            - common_name
+        valid_from: {type: date_or_null, required: false}
+        valid_to: {type: date_or_null, required: false}
+        notes: {type: string_or_null, required: false}
+  product_family:
+    type: object_or_null
+    fields:
+      name: {type: string}
+      relationship:
+        type: enum
+        values: [member_of, umbrella_for, same_as_target_when_family_requested]
+  versions_editions:
+    type: list
+    items:
+      fields:
+        term: {type: string, required: true}
+        relationship:
+          type: enum
+          values: [version_of_target, edition_of_target, distribution_of_target]
+        notes: {type: string_or_null, required: false}
+  components:
+    type: list
+    description: Komponenter som ingår i målprodukten men inte är likvärdiga med hela produkten.
+    items:
+      fields:
+        term: {type: string, required: true}
+        relationship: {type: const, value: component_of_target}
+  underlying_technologies:
+    type: list
+    description: Tekniker som målprodukten bygger på men som inte bevisar målprodukten.
+    items:
+      fields:
+        term: {type: string, required: true}
+        relationship: {type: const, value: underlying_technology}
+  related_but_not_equivalent_terms:
+    type: list
+    description: Närliggande produkter/tekniker som kan ge relevanta sökspår men inte produktbelägg.
+    items:
+      fields:
+        term: {type: string, required: true}
+        relationship:
+          type: enum
+          values:
+            - adjacent_technology
+            - competitor
+            - predecessor_uncertain
+            - successor_uncertain
+            - ecosystem_term
+            - generic_category
+        notes: {type: string_or_null, required: false}
+  exclusions:
+    type: list
+    description: Termer eller betydelser som uttryckligen ska avvisas som falska träffar.
+    items:
+      fields:
+        term: {type: string, required: true}
+        reason: {type: string, required: true}
+  ambiguity_notes:
+    type: list
+    items: {type: string}
+  search_terms:
+    type: object
+    fields:
+      exact:
+        type: list
+        items: {type: string}
+      expansion:
+        type: list
+        items: {type: string}
+      disambiguation:
+        type: list
+        items: {type: string}
+      negative_terms:
+        type: list
+        items: {type: string}
+match_classes:
+  - id: exact_target
+    counts_as_direct_target_match: true
+    description: Canonical namn eller uttrycklig exakt produktidentitet.
+  - id: verified_alias
+    counts_as_direct_target_match: true
+    description: Verifierat alias, tidigare officiellt namn eller entydig förkortning.
+  - id: target_version_or_edition
+    counts_as_direct_target_match: true
+    description: Version eller edition som uttryckligen tillhör målprodukten.
+  - id: family_only
+    counts_as_direct_target_match: false
+    description: Träffen gäller endast produktfamiljen när användaren frågar efter en specifik medlem.
+  - id: component_only
+    counts_as_direct_target_match: false
+    description: Träffen gäller en komponent och bevisar inte hela målprodukten.
+  - id: underlying_technology_only
+    counts_as_direct_target_match: false
+    description: Träffen gäller underliggande teknik.
+  - id: related_not_equivalent
+    counts_as_direct_target_match: false
+    description: Relevant närliggande begrepp men inte likvärdigt med målprodukten.
+  - id: ambiguous_term
+    counts_as_direct_target_match: false
+    description: Termen är tvetydig och kräver kontextuell verifiering.
+  - id: excluded_false_match
+    counts_as_direct_target_match: false
+    description: Känd falsk träff som ska exkluderas.

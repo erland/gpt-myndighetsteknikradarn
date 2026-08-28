@@ -1,0 +1,19 @@
+id: EVAL-011
+title: Inga träffar är inte bevis för frånvaro
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: manual_response
+  prompt: En faktiskt analyserad testmyndighet gav inga relevanta spår efter sökplanen.
+    Presentera utfallet.
+expected:
+  required:
+  - inga relevanta spår hittades
+  - inte bevis för att tekniken saknas
+  - myndigheten var faktiskt analyserad
+  forbidden:
+  - tekniken används inte
+  - produkten saknas
+scoring:
+  pass_threshold: 1.0

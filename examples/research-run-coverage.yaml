@@ -1,0 +1,26 @@
+schema_version: 1
+research_run:
+  target: Red Hat OpenShift
+  universe:
+    source: SCB Allmänna myndighetsregistret
+    retrieved_date: 2026-08-27
+    agency_universe_count: 449
+  scope:
+    profile: technology_research_default
+    scoped_agency_count: 259
+    exclusions:
+      - individual_courts
+      - foreign_missions
+  coverage:
+    analyzed_count: 120
+    not_analyzed_count: 139
+    coverage_percent: 46.33
+  outcomes:
+    likely_count: 18
+    trace_count: 13
+    no_trace_count: 84
+    unresolved_count: 5
+  state: partial
+  reconciliation:
+    scope_equals_analyzed_plus_not_analyzed: true
+    analyzed_equals_outcome_sum: true

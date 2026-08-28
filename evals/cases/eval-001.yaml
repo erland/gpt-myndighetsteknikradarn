@@ -1,0 +1,17 @@
+id: EVAL-001
+title: Två oberoende starka källor ger hög säkerhet
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: scoring_scenario
+  fixture: strong_multi_source
+expected:
+  required:
+  - display_category=likely_or_confirmed
+  - score>=85
+  - två oberoende claim-grupper
+  forbidden:
+  - sannolikhetsprocent
+scoring:
+  pass_threshold: 1.0

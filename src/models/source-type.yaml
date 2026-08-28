@@ -1,0 +1,121 @@
+schema_version: 1
+model: source_type_taxonomy
+purpose: Canonical klassificering av källor som används i teknikresearch.
+source_types:
+  agency_official:
+    label_sv: Myndighetens egen källa
+    priority: 1
+    original_source_preferred: true
+    examples:
+    - webbsida
+    - teknisk rapport
+    - arkitekturdokument
+    - årsredovisning
+    - pressmeddelande
+    - presentation
+    interpretation: Kan ge starkt direkt stöd när myndigheten uttryckligen beskriver
+      egen aktuell miljö eller användning.
+  agency_contact_or_staff_page:
+    label_sv: Myndighetens kontakt-/personsida
+    priority: 1
+    original_source_preferred: true
+    examples:
+    - kontaktsida
+    - organisationssida
+    - personsida
+    - presskontakt
+    interpretation: Primär källa för aktuell yrkesroll och offentligt publicerad professionell
+      kontaktväg; kontrollera datum och sammanhang.
+  agency_public_code:
+    label_sv: Myndighetens publika kod/repository
+    priority: 1
+    original_source_preferred: true
+    examples:
+    - GitHub
+    - GitLab
+    - öppet källkodsrepo
+    interpretation: Kan visa konkret teknisk användning i kod, men repositoryägande
+      och produktionskoppling måste verifieras.
+  procurement_notice:
+    label_sv: Upphandlingsannons/förfrågningsunderlag
+    priority: 2
+    original_source_preferred: true
+    interpretation: Visar behov eller avsikt att anskaffa; är inte i sig bevis för
+      faktisk användning eller drift.
+  procurement_rfi:
+    label_sv: RFI/marknadsdialog
+    priority: 2
+    original_source_preferred: true
+    interpretation: Visar marknadsundersökning eller behovsbild; får aldrig tolkas
+      som bevis för köp eller användning.
+  procurement_award:
+    label_sv: Tilldelningsbeslut/efterannons
+    priority: 2
+    original_source_preferred: true
+    interpretation: Visar tilldelning eller resultat av upphandling; stärker anskaffningshypotes
+      men bevisar inte driftsättning.
+  procurement_contract_or_calloff:
+    label_sv: Avtal/avrop/beställning
+    priority: 2
+    original_source_preferred: true
+    interpretation: Visar ett starkare anskaffningsspår men faktisk implementation
+      eller aktuell drift ska om möjligt verifieras separat.
+  framework_agreement:
+    label_sv: Ramavtal
+    priority: 2
+    original_source_preferred: true
+    interpretation: Visar att produkten kan avropas; ett ramavtal utan myndighetsspecifikt
+      avrop är inte evidens för att myndigheten använder produkten.
+  job_ad_official:
+    label_sv: Myndighetens jobbannons
+    priority: 3
+    original_source_preferred: true
+    interpretation: Styrkan beror på formuleringen. Befintlig miljö är starkare än
+      krav eller meriterande kompetens.
+  job_ad_aggregator:
+    label_sv: Jobbaggregator
+    priority: 6
+    original_source_preferred: false
+    interpretation: Används främst för discovery. Sök originalannons när det är möjligt.
+  professional_profile:
+    label_sv: Professionell profil
+    priority: 4
+    original_source_preferred: false
+    interpretation: Självrapporterad yrkesinformation. Kontrollera arbetsgivare, tidsperiod
+      och om tekniken avser just den rollen.
+  conference_or_presentation:
+    label_sv: Konferens/presentation
+    priority: 4
+    original_source_preferred: true
+    interpretation: Kan ge starkt stöd när talare från myndigheten konkret beskriver
+      egen implementation; datum och roll ska kontrolleras.
+  vendor_customer_case:
+    label_sv: Leverantörens kundcase/referens
+    priority: 5
+    original_source_preferred: true
+    interpretation: Relevant men partsintresse finns. Sök oberoende eller myndighetsnära
+      verifiering när belägget är avgörande.
+  industry_press:
+    label_sv: Branschpress
+    priority: 6
+    original_source_preferred: false
+    interpretation: Sekundär källa som kan ge bra discovery och kontext. Verifiera
+      centrala teknikpåståenden i originalkälla när möjligt.
+  government_or_public_document:
+    label_sv: Annan offentlig källa
+    priority: 2
+    original_source_preferred: true
+    interpretation: Regerings-, riksdags- eller annan offentlig dokumentation kan
+      ge relevant extern verifiering.
+  search_result_snippet:
+    label_sv: Sökträff/snippet
+    priority: 7
+    original_source_preferred: false
+    interpretation: Discovery endast. En snippet ska inte ensam bära en positiv slutbedömning
+      om källan kan öppnas.
+  other_web:
+    label_sv: Övrig webkälla
+    priority: 7
+    original_source_preferred: false
+    interpretation: Kompletterande signal. Bedöm ägare, proveniens, datum och möjlighet
+      att verifiera originaluppgiften.

@@ -1,0 +1,50 @@
+schema_version: 1
+model: ResearchCheckpoint
+purpose: Ett atomiskt, validerbart återupptagningspaket för en ResearchRun.
+required_fields:
+  - checkpoint_id
+  - run_id
+  - sequence
+  - created_at
+  - reason
+  - run_state
+  - state_fingerprint
+fields:
+  checkpoint_id: string
+  run_id: string
+  sequence:
+    type: integer
+    minimum: 1
+  created_at: datetime
+  reason:
+    type: enum
+    values:
+      - batch_complete
+      - before_partial_result
+      - user_pause
+      - context_boundary
+      - before_export
+      - before_contact_research
+      - manual
+  previous_checkpoint_id: string_or_null
+  run_state:
+    type: ResearchRun
+  next_work:
+    type: object
+    purpose: Cachead rekommendation som måste kunna härledas på nytt från run_state.
+    fields:
+      phase: enum_or_null[screen, deepen, verify, negative_control, synthesize]
+      agency_ids: array_of_string
+      batch_size: integer_or_null
+      reason: string
+  state_fingerprint:
+    type: sha256
+  checkpoint_format_version:
+    type: integer
+    default: 1
+validation:
+  - run_id måste matcha run_state.run_id
+  - sequence måste vara större än föregående checkpoints sequence
+  - state_fingerprint måste matcha canonical serialisering av run_state
+  - next_work får inte vara enda källan för resume; agency_states är canonical
+  - checkpoint med brutna coverage-invariants får inte användas för resume

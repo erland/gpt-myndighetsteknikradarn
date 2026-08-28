@@ -1,0 +1,10 @@
+schema_version: 1
+project: myndighetsteknikradarn
+architecture_type: workflow_research_heavy
+canonical_instruction: src/instructions/canonical.md
+custom_gpt_instruction: src/instructions/system.md
+target_model: src/models/target-model.yaml
+primary_workflow: src/workflows/research-flow.yaml
+resume_workflow: src/workflows/resume-flow.yaml
+primary_runtime: chat_zip
+secondary_runtime: custom_gpt

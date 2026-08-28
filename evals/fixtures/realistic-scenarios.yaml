@@ -1,0 +1,162 @@
+schema_version: 1
+note: >-
+  Alla myndighetsnamn och källor i denna fil är syntetiska testdata. De får inte
+  tolkas som uppgifter om verkliga svenska myndigheter.
+scenarios:
+  - id: strong_multi_source
+    agency: Testmyndigheten Alfa
+    target: Red Hat OpenShift
+    evidence:
+      - evidence_id: ev-a1
+        source_type: agency_official
+        usage_semantics: current_use_explicit
+        directness: direct
+        match_class: exact_target
+        source_date: '2026-06-01'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-a1, relationship: unique}
+      - evidence_id: ev-a2
+        source_type: procurement_contract_or_calloff
+        usage_semantics: procurement_contract_or_calloff
+        directness: near_direct
+        match_class: exact_target
+        source_date: '2026-03-10'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-a2, relationship: independent_corroboration}
+  - id: kubernetes_only
+    agency: Testmyndigheten Beta
+    target: Red Hat OpenShift
+    evidence:
+      - evidence_id: ev-b1
+        source_type: job_ad_official
+        usage_semantics: current_environment_explicit
+        directness: direct
+        match_class: underlying_technology_only
+        source_date: '2026-07-01'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-b1, relationship: unique}
+  - id: rfi_only
+    agency: Testmyndigheten Gamma
+    target: ServiceNow
+    evidence:
+      - evidence_id: ev-c1
+        source_type: procurement_rfi
+        usage_semantics: procurement_intent
+        directness: near_direct
+        match_class: exact_target
+        source_date: '2026-04-01'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-c1, relationship: unique}
+  - id: award_without_runtime
+    agency: Testmyndigheten Delta
+    target: Splunk
+    evidence:
+      - evidence_id: ev-d1
+        source_type: procurement_award
+        usage_semantics: procurement_award
+        directness: near_direct
+        match_class: exact_target
+        source_date: '2026-02-20'
+        freshness: {band: recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-d1, relationship: unique}
+  - id: duplicate_job_ads
+    agency: Testmyndigheten Epsilon
+    target: Oracle Database
+    evidence:
+      - evidence_id: ev-e1
+        source_type: job_ad_official
+        usage_semantics: current_environment_explicit
+        directness: direct
+        match_class: exact_target
+        source_date: '2026-05-15'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-e, relationship: unique}
+      - evidence_id: ev-e2
+        source_type: job_ad_aggregator
+        usage_semantics: current_environment_explicit
+        directness: direct
+        match_class: exact_target
+        source_date: '2026-05-15'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-e, relationship: derivative_same_claim}
+  - id: merit_only
+    agency: Testmyndigheten Zeta
+    target: GitLab
+    evidence:
+      - evidence_id: ev-f1
+        source_type: job_ad_official
+        usage_semantics: competence_merit
+        directness: indirect
+        match_class: exact_target
+        source_date: '2026-07-10'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-f1, relationship: unique}
+  - id: explicit_existing_environment
+    agency: Testmyndigheten Eta
+    target: PostgreSQL
+    evidence:
+      - evidence_id: ev-g1
+        source_type: job_ad_official
+        usage_semantics: current_environment_explicit
+        directness: direct
+        match_class: exact_target
+        source_date: '2026-07-05'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-g1, relationship: unique}
+  - id: old_historical_only
+    agency: Testmyndigheten Theta
+    target: VMware vSphere
+    evidence:
+      - evidence_id: ev-h1
+        source_type: industry_press
+        usage_semantics: historical_use
+        directness: near_direct
+        match_class: exact_target
+        source_date: '2018-01-15'
+        freshness: {band: old}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-h1, relationship: unique}
+  - id: newer_decommission
+    agency: Testmyndigheten Iota
+    target: IBM MQ
+    evidence:
+      - evidence_id: ev-i1
+        source_type: agency_official
+        usage_semantics: current_use_explicit
+        directness: direct
+        match_class: exact_target
+        source_date: '2022-02-01'
+        freshness: {band: aging}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-i-use, relationship: unique}
+      - evidence_id: ev-i2
+        source_type: agency_official
+        usage_semantics: decommission_or_replacement
+        directness: direct
+        match_class: exact_target
+        source_date: '2026-05-01'
+        freshness: {band: very_recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-i-retire, relationship: independent_corroboration}
+  - id: vendor_case_only
+    agency: Testmyndigheten Kappa
+    target: ServiceNow
+    evidence:
+      - evidence_id: ev-j1
+        source_type: vendor_customer_case
+        usage_semantics: current_use_explicit
+        directness: direct
+        match_class: exact_target
+        source_date: '2026-02-01'
+        freshness: {band: recent}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true}
+        deduplication: {claim_duplicate_group: claim-j1, relationship: unique}

@@ -1,0 +1,42 @@
+schema_version: 1
+model: ContactResearchRun
+purpose: Separat, spårbar researchkörning för att hitta relevanta professionella kontaktpersoner efter teknikbedömningen.
+required_fields:
+  - run_id
+  - target
+  - agencies
+  - status
+fields:
+  run_id: string
+  parent_research_run_id: string_or_null
+  target:
+    type: object
+    required: [canonical_name]
+  agencies:
+    type: array
+    item:
+      fields:
+        agency_id: string
+        agency_name: string
+        status: enum[pending, searched, candidates_found, fallback_only, unresolved]
+        candidate_ids: array_of_string
+        switchboard_verified: boolean
+  search_passes:
+    type: array
+    values:
+      - official_roles_and_organization
+      - architect_and_domain_roles
+      - professional_profiles_and_events
+      - contact_verification
+      - fallback_verification
+  status:
+    type: enum
+    values: [partial, complete]
+  searched_agency_count: integer
+  candidate_count: integer
+  fallback_only_count: integer
+  limitations: array_of_string
+invariants:
+  - Kontaktpersonsresearch får inte blandas ihop med teknikens AgencyAssessment.
+  - En ny teknikkälla som upptäcks under kontaktresearch registreras som separat Evidence innan eventuell teknikbedömning uppdateras.
+  - complete kräver att samtliga valda myndigheter har status candidates_found, fallback_only eller unresolved.

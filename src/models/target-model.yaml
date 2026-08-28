@@ -1,0 +1,159 @@
+schema_version: 1
+model: myndighetsteknikradarn-target-model
+purpose: Målmodell för de centrala informationsobjekt som GPT:n ska använda när full researchfunktionalitet implementeras.
+entities:
+  TechnologyTarget:
+    purpose: Normaliserar sökt produkt eller teknologi och separerar exakta identiteter från sökexpansion och falska ekvivalenser.
+    planned_fields:
+    - canonical_name
+    - target_kind
+    - vendor
+    - aliases
+    - product_family
+    - versions_editions
+    - components
+    - underlying_technologies
+    - related_but_not_equivalent_terms
+    - exclusions
+    - ambiguity_notes
+    - search_terms
+    implemented_in: src/models/technology-target.yaml
+  Agency:
+    purpose: Representerar en svensk myndighet som kan ingå i analysuniversumet.
+    planned_fields:
+    - name
+    - organization_number
+    - source_registry_id
+    - agency_group
+    - agency_subtype
+    - website
+    - active
+    - registry_source
+    - registry_retrieved_date
+    - aliases
+    - notes
+    implemented_in: src/models/agency.yaml
+  Evidence:
+    purpose: En enskild spårbar evidenspost för en myndighet och teknik.
+    planned_fields:
+    - agency
+    - technology
+    - source_type
+    - source_url
+    - source_date
+    - retrieved_date
+    - evidence_summary
+    - directness
+    - strength
+    - freshness
+    - duplicate_group
+    - notes
+    - search_family
+    - usage_semantics
+    - source_owner_type
+    source_taxonomy: src/models/source-type.yaml
+    implemented_in: src/models/evidence.yaml
+    deduplication_policy: src/policies/evidence-and-deduplication.md
+  AgencyAssessment:
+    purpose: Samlad bedömning av sannolik användning för en myndighet.
+    planned_fields:
+    - agency
+    - score
+    - evidence_level
+    - display_category
+    - rationale
+    - evidence_ids
+    - source_types
+    - latest_evidence
+    - caveats
+    implemented_in: src/models/agency-assessment.yaml
+    scoring_policy: src/policies/scoring-and-confidence.md
+  ContactCandidate:
+    purpose: Professionell kontaktkandidat för vidare dialog.
+    planned_fields:
+    - name
+    - agency
+    - role
+    - relevance
+    - public_email
+    - public_phone
+    - switchboard
+    - source
+    - role_freshness
+    - confidence
+  ResearchRun:
+    purpose: Håller samman täckning och status för en flerpassanalys.
+    planned_fields:
+    - target
+    - started_at
+    - agency_universe_source
+    - agency_universe_retrieved_date
+    - agency_universe_count
+    - scope_profile
+    - scoped_agency_count
+    - analyzed_count
+    - not_analyzed_count
+    - likely_count
+    - trace_count
+    - no_trace_count
+    - unresolved_count
+    - passes_completed
+    - run_id
+    - run_status
+    - target_snapshot
+    - scope_snapshot
+    - agency_states
+    - checkpoint_sequence
+    - last_checkpoint_id
+    - event_log
+    coverage_policy: src/policies/coverage-accounting.md
+    universe_model: src/models/agency-universe.yaml
+    implemented_in: src/models/research-run.yaml
+    resume_policy: src/policies/multipass-resume.md
+  ResearchCheckpoint:
+    purpose: Atomiskt validerat snapshot av en ResearchRun för säker återupptagning.
+    planned_fields:
+    - checkpoint_id
+    - run_id
+    - sequence
+    - created_at
+    - reason
+    - run_state
+    - next_work
+    - state_fingerprint
+    implemented_in: src/models/research-checkpoint.yaml
+relationships:
+- from: ResearchRun
+  to: TechnologyTarget
+  type: analyzes
+- from: ResearchRun
+  to: Agency
+  type: scopes
+- from: Evidence
+  to: Agency
+  type: supports_assessment_of
+- from: Evidence
+  to: TechnologyTarget
+  type: concerns
+- from: AgencyAssessment
+  to: Evidence
+  type: aggregates
+- from: ContactCandidate
+  to: Agency
+  type: associated_with
+- from: ResearchCheckpoint
+  to: ResearchRun
+  type: snapshots
+step9_extensions:
+  contact_research:
+    models:
+    - ContactResearchRun
+    - ContactCandidate
+    relation: ContactResearchRun may link to ResearchRun and targets selected Agencies; ContactCandidate belongs to one Agency.
+step11_extensions:
+  multipass_resume:
+    models:
+    - ResearchRun
+    - ResearchCheckpoint
+    workflow: src/workflows/resume-flow.yaml
+    policy: src/policies/multipass-resume.md

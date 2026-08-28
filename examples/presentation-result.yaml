@@ -1,0 +1,203 @@
+target:
+  canonical_name: Red Hat OpenShift
+run_status: partial
+scope:
+  profile: core_state_agencies
+  snapshot_date: 2026-08-27
+  exclusions:
+  - Enskilda domstolar analyseras inte separat i denna profil.
+  - Utlandsmyndigheter analyseras inte separat i denna profil.
+coverage:
+  scoped_agency_count: 10
+  analyzed_count: 7
+  likely_count: 3
+  trace_count: 2
+  no_trace_count: 1
+  unresolved_count: 1
+  not_analyzed_count: 3
+ranked_assessments:
+- agency_id: agency-a
+  agency_name: Myndighet Alfa
+  display_category: likely_or_confirmed
+  evidence_level: level_5_direct_confirmed
+  score: 92
+  rationale: Myndigheten beskriver uttryckligen OpenShift som del av aktuell plattform
+    och ett senare avrop stöder fortsatt användning.
+  source_types:
+  - official_agency
+  - procurement_contract
+  latest_relevant_evidence_date: 2026-05-14
+  evidence_refs:
+  - ev-a1
+  - ev-a2
+  caveats: []
+- agency_id: agency-b
+  agency_name: Myndighet Beta
+  display_category: likely_or_confirmed
+  evidence_level: level_4_very_strong
+  score: 79
+  rationale: Två aktuella jobbannonser beskriver OpenShift i befintlig plattformsmiljö.
+  source_types:
+  - official_job_ad
+  latest_relevant_evidence_date: 2026-02-01
+  evidence_refs:
+  - ev-b1
+  caveats: []
+- agency_id: agency-c
+  agency_name: Myndighet Gamma
+  display_category: likely_or_confirmed
+  evidence_level: level_3_likely
+  score: 63
+  rationale: Myndighetsspecifikt avrop och tekniskt presentationsmaterial pekar på
+    användning, men driftstatus är inte explicit verifierad.
+  source_types:
+  - procurement_calloff
+  - conference_presentation
+  latest_relevant_evidence_date: 2025-11-20
+  evidence_refs:
+  - ev-c1
+  - ev-c2
+  caveats:
+  - Faktisk aktuell drift är inte uttryckligen bekräftad.
+- agency_id: agency-d
+  agency_name: Myndighet Delta
+  display_category: trace
+  evidence_level: level_2_trace
+  score: 44
+  rationale: En aktuell professionell profil kopplar OpenShift-arbete till myndigheten,
+    men originalkälla från myndigheten saknas.
+  source_types:
+  - professional_profile
+  latest_relevant_evidence_date: 2026-01-10
+  evidence_refs:
+  - ev-d1
+  caveats:
+  - Indirekt källa.
+- agency_id: agency-e
+  agency_name: Myndighet Epsilon
+  display_category: trace
+  evidence_level: level_1_weak_trace
+  score: 18
+  rationale: Äldre jobbannons nämner OpenShift som meriterande kompetens utan att
+    beskriva befintlig miljö.
+  source_types:
+  - official_job_ad
+  latest_relevant_evidence_date: 2023-06-01
+  evidence_refs:
+  - ev-e1
+  caveats:
+  - Gammalt och svagt belägg.
+- agency_id: agency-f
+  agency_name: Myndighet Zeta
+  display_category: unresolved
+  evidence_level: unresolved
+  score: 0
+  rationale: Äldre användningsbelägg motsägs av senare migrationsuppgift men målplattformen
+    framgår inte.
+  source_types:
+  - official_agency
+  - industry_press
+  latest_relevant_evidence_date: 2026-04-01
+  evidence_refs:
+  - ev-f1
+  - ev-f2
+  caveats:
+  - Motstridigt underlag.
+- agency_id: agency-g
+  agency_name: Myndighet Eta
+  display_category: no_trace_found
+  evidence_level: level_0_no_relevant_evidence
+  score: 0
+  rationale: Inga relevanta OpenShift-belägg hittades efter genomförd screening och
+    alternativ kontroll.
+  source_types: []
+  latest_relevant_evidence_date: null
+  evidence_refs: []
+  caveats: []
+source_type_summary:
+- source_type: official_agency
+  agencies_supported: 2
+  evidence_items: 2
+- source_type: official_job_ad
+  agencies_supported: 2
+  evidence_items: 2
+- source_type: procurement_contract
+  agencies_supported: 1
+  evidence_items: 1
+methodology_note: Produkten normaliserades före sökning. Flera källtyper söktes adaptivt,
+  evidens deduplicerades före scoring och aktualitet samt motsägande belägg vägdes
+  in. Säkerhetsvärdet 0–100 är en rangordningssignal, inte statistisk sannolikhet.
+limitations:
+- Detta är ett delresultat; tre myndigheter återstår att analysera.
+- Ett positivt belägg bygger endast på en indirekt professionell profil.
+next_actions:
+- Hitta lämpliga kontaktpersoner för positiva myndigheter.
+- Exportera resultatet när exportmodulen är implementerad.
+evidence_details:
+- evidence_id: ev-a1
+  agency_id: agency-a
+  source_type: official_agency
+  source_title: Teknisk plattformsbeskrivning
+  source_url: https://example.invalid/agency-a/platform
+  source_date: '2026-05-14'
+  directness: direct
+  summary: Myndigheten beskriver OpenShift som del av den aktuella plattformen.
+  caveats: []
+- evidence_id: ev-a2
+  agency_id: agency-a
+  source_type: procurement_contract
+  source_title: Myndighetsspecifikt avrop
+  source_url: https://example.invalid/agency-a/calloff
+  source_date: '2026-04-08'
+  directness: direct
+  summary: Avropet namnger OpenShift och stödjer fortsatt myndighetsspecifik användning.
+  caveats:
+  - Avrop är inte ensamt bevis för faktisk drift.
+- evidence_id: ev-b1
+  agency_id: agency-b
+  source_type: official_job_ad
+  source_title: Plattformsingenjör
+  source_url: https://example.invalid/agency-b/job
+  source_date: '2026-02-01'
+  directness: direct
+  summary: Annonsen beskriver OpenShift i myndighetens befintliga plattformsmiljö.
+  caveats: []
+- evidence_id: ev-c1
+  agency_id: agency-c
+  source_type: procurement_calloff
+  source_title: Avrop av plattformstjänster
+  source_url: https://example.invalid/agency-c/calloff
+  source_date: '2025-11-20'
+  directness: direct
+  summary: Myndighetsspecifikt avrop namnger OpenShift.
+  caveats:
+  - Aktuell drift behöver ytterligare verifiering.
+- evidence_id: ev-c2
+  agency_id: agency-c
+  source_type: conference_presentation
+  source_title: Konferenspresentation
+  source_url: https://example.invalid/agency-c/presentation
+  source_date: '2025-10-15'
+  directness: indirect
+  summary: Presentation kopplar OpenShift till myndighetens plattformsarbete.
+  caveats: []
+- evidence_id: ev-d1
+  agency_id: agency-d
+  source_type: professional_profile
+  source_title: Professionell profil
+  source_url: https://example.invalid/agency-d/profile
+  source_date: '2026-01-10'
+  directness: indirect
+  summary: Profilen kopplar OpenShift-arbete till aktuell roll vid myndigheten.
+  caveats:
+  - Indirekt källa.
+- evidence_id: ev-e1
+  agency_id: agency-e
+  source_type: official_job_ad
+  source_title: Äldre jobbannons
+  source_url: https://example.invalid/agency-e/job
+  source_date: '2023-06-01'
+  directness: indirect
+  summary: OpenShift anges endast som meriterande kompetens.
+  caveats:
+  - Svagt belägg för faktisk användning.

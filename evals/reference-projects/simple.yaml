@@ -1,0 +1,12 @@
+characteristics:
+  research_heavy: false
+  evidence_required: false
+  multi_stage_workflow: false
+  project_zip_manipulation: false
+  scripts_required: false
+  rich_structured_runtime: false
+  structured_knowledge: false
+  repeatable_outputs: false
+  moderate_workflow: false
+expected:
+  profile: simple

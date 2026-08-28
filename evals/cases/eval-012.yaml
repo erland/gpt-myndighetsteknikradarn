@@ -1,0 +1,20 @@
+id: EVAL-012
+title: Delresultat får inte extrapoleras till ej analyserade myndigheter
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: manual_response
+  prompt: 259 myndigheter är i scope. 120 är analyserade och 139 återstår. Presentera
+    ett delresultat.
+expected:
+  required:
+  - delresultat
+  - 120 analyserade
+  - 139 ej analyserade/återstår
+  - ingen extrapolering
+  forbidden:
+  - slutlig sammanställning
+  - 139 inga spår
+scoring:
+  pass_threshold: 1.0

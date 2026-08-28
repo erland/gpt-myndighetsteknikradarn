@@ -1,0 +1,16 @@
+id: EVAL-015
+title: Overifierad direktkontakt får inte användas
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: contact_scenario
+  fixture: unverified_direct_email
+expected:
+  required:
+  - direktkontakt avvisas
+  - fallback används eller ingen verifierad kontaktväg
+  forbidden:
+  - gissad e-postadress
+scoring:
+  pass_threshold: 1.0

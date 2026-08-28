@@ -1,0 +1,61 @@
+schema_version: 1
+note: Syntetiska testpersoner och testmyndigheter.
+scenarios:
+  current_architect_switchboard:
+  - name: Ada Arkitekt
+    agency: Testmyndigheten Lambda
+    role: IT-arkitekt
+    role_class: it_architect
+    role_status: current_verified
+    target_relevance: domain_related
+    confidence: 90
+    contact_path:
+      kind: agency_switchboard
+      phone: 010-000 00 00
+      verified_public_professional: true
+  - name: Cia Chef
+    agency: Testmyndigheten Lambda
+    role: IT-chef
+    role_class: cio_or_it_director
+    role_status: current_verified
+    target_relevance: general_it
+    confidence: 95
+    contact_path:
+      kind: agency_general_email
+      email: kontakt@example.invalid
+      verified_public_professional: true
+  former_architect:
+  - name: Före Detta
+    agency: Testmyndigheten Mu
+    role: Tidigare chefsarkitekt
+    role_class: chief_architect
+    role_status: former
+    target_relevance: explicit
+    confidence: 99
+    contact_path:
+      kind: public_work_email
+      email: former@example.invalid
+      verified_public_professional: true
+  - name: Nuvarande Arkitekt
+    agency: Testmyndigheten Mu
+    role: Enterprise architect
+    role_class: enterprise_architect
+    role_status: current_verified
+    target_relevance: domain_related
+    confidence: 80
+    contact_path:
+      kind: agency_switchboard
+      phone: 010-000 00 01
+      verified_public_professional: true
+  unverified_direct_email:
+  - name: Gissa Inte
+    agency: Testmyndigheten Nu
+    role: IT-arkitekt
+    role_class: it_architect
+    role_status: current_verified
+    target_relevance: explicit
+    confidence: 85
+    contact_path:
+      kind: public_work_email
+      email: gissa.inte@example.invalid
+      verified_public_professional: false

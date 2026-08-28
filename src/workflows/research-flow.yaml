@@ -1,0 +1,127 @@
+schema_version: 1
+workflow: technology_usage_research
+purpose: Standardflöde för flerpasskartläggning av sannolik produkt- eller teknologianvändning hos svenska myndigheter.
+phases:
+- id: prepare
+  order: 0
+  objective: Initiera target, scope och ResearchRun.
+  outputs:
+  - technology_target
+  - agency_universe_snapshot
+  - scope_profile
+  - scoped_agencies
+  - run_state
+  normalization_requirements:
+  - canonical_name_defined
+  - target_kind_defined
+  - aliases_classified
+  - search_terms_grouped
+  - non_equivalent_terms_separated
+  - known_exclusions_recorded
+  scope_requirements:
+  - canonical_registry_source_recorded
+  - registry_retrieved_date_recorded
+  - scope_profile_recorded
+  - scope_exclusions_recorded
+  - scoped_agency_count_derived_from_unique_active_records
+- id: screen
+  order: 1
+  objective: Bred screening av varje myndighet i scope.
+  agency_status_outputs:
+  - positive_candidate
+  - no_trace_yet
+  - ambiguous
+  - not_analyzed
+  search_plan: src/workflows/search-plans.yaml#stages.screen
+  source_requirements:
+  - record_search_family
+  - prefer_original_source
+  - classify_source_type
+- id: deepen
+  order: 2
+  objective: Fördjupa positiva och tvetydiga kandidater och söka bättre belägg.
+  focus:
+  - technology_match_class
+  - agency_identity
+  - usage_semantics
+  - freshness
+  - independent_support
+  checks:
+  - classify_each_relevant_technology_mention
+  - do_not_promote_search_expansion_to_target_evidence
+  - classify_source_type
+  - classify_usage_semantics
+  - treat_procurement_stage_explicitly
+  - treat_job_ad_wording_explicitly
+  search_plan: src/workflows/search-plans.yaml#stages.deepen
+- id: verify
+  order: 3
+  objective: Verifiera evidens som påverkar slutbedömningen.
+  checks:
+  - original_source
+  - publication_date
+  - current_vs_historic
+  - procurement_semantics
+  - job_ad_semantics
+  - duplicate_origin
+  - contradiction
+  source_policy: src/policies/source-strategy.md
+- id: negative_control
+  order: 4
+  objective: Alternativ kontroll av myndigheter utan relevanta spår.
+  optional_when: Kan reduceras när scope eller verktygsbegränsningar kräver det, men detta ska då redovisas som begränsning.
+  search_plan: src/workflows/search-plans.yaml#stages.negative_control
+- id: synthesize
+  order: 5
+  objective: Skapa assessments, totalsiffror, sortering och slutpresentation.
+  coverage_checks:
+  - scope_equals_analyzed_plus_not_analyzed
+  - analyzed_equals_likely_plus_trace_plus_no_trace_plus_unresolved
+  - not_analyzed_never_counted_as_no_trace
+  - scope_exclusions_disclosed
+completion:
+  minimum_for_partial_result:
+  - scope_known
+  - analyzed_count_known
+  - batch_state_persisted
+  - valid_checkpoint_created_before_presentation
+  minimum_for_final_result:
+  - all_in_scope_have_process_status
+  - assessments_created_for_analyzed_agencies
+  - totals_reconciled
+  - scope_profile_and_exclusions_reported
+  - limitations_reported
+batching:
+  allowed: true
+  preserve_across_batches:
+  - target
+  - scope
+  - agency_process_status
+  - evidence
+  - assessments
+  - passes_completed
+  - passes_remaining
+  rules:
+  - do_not_research_completed_agencies_without_reason
+  - never_count_not_analyzed_as_no_trace
+  - mark_partial_results_as_incomplete
+  - derive_next_batch_from_agency_states_not_from_cursor_only
+  - continue_in_progress_work_before_new_work
+  - completed_agencies_require_revisit_reason_before_researching_again
+  - recompute_counters_from_agency_states_at_checkpoint
+  - validate_checkpoint_fingerprint_before_resume
+  canonical_state: src/models/research-run.yaml
+  checkpoint_model: src/models/research-checkpoint.yaml
+  resume_workflow: src/workflows/resume-flow.yaml
+  checkpoint_after:
+  - batch_complete
+  - before_partial_result
+  - user_pause
+  - context_boundary
+post_actions:
+- offer_contact_research
+- offer_export
+iteration_triggers:
+- new_verified_alias
+- target_identity_correction
+- new_false_equivalence

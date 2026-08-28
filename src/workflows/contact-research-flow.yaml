@@ -1,0 +1,62 @@
+schema_version: 1
+workflow: contact_person_research
+purpose: Separat flerpassflöde för att hitta och verifiera relevanta professionella kontaktpersoner.
+entry_conditions:
+  - user_requested_contact_research
+  - one_or_more_agencies_selected
+phases:
+  - id: C0
+    name: initiera
+    actions:
+      - create ContactResearchRun linked to parent ResearchRun when available
+      - select agencies
+      - retain TechnologyTarget
+  - id: C1
+    name: official_roles_and_organization
+    goal: Hitta aktuell ansvarig via myndighetens egna sidor och dokument.
+    query_families:
+      - agency + chefsarkitekt
+      - agency + enterprise architect
+      - agency + IT-arkitekt
+      - agency + CIO OR IT-chef OR IT-direktör
+      - site:agency-domain + arkitekt
+  - id: C2
+    name: architect_and_domain_roles
+    goal: Hitta måltekniknära ansvar när generell arkitektroll inte räcker.
+    query_families:
+      - agency + target + arkitekt
+      - agency + target-domain + plattformsarkitekt
+      - agency + target-domain + produktägare OR produktansvarig
+      - agency + platform-domain + ansvarig
+  - id: C3
+    name: professional_profiles_and_events
+    goal: Komplettera och verifiera roller via offentliga professionella profiler, konferenser och branschmaterial.
+    constraints:
+      - verify employer and time period
+      - do not collect private contact data
+      - prefer original professional source
+  - id: C4
+    name: contact_verification
+    goal: Verifiera att eventuell direkt kontaktuppgift är offentligt publicerad i professionellt sammanhang.
+    actions:
+      - prefer agency official contact or staff pages
+      - preserve source URL and retrieved date
+      - never infer email or phone
+  - id: C5
+    name: fallback_verification
+    goal: Säkerställ officiell kontaktväg när direkt professionell kontakt saknas.
+    actions:
+      - verify switchboard on official agency source
+      - otherwise use official contact form or general email
+  - id: C6
+    name: rank_and_present
+    actions:
+      - exclude former contacts from recommended current candidates
+      - rank role relevance before contact convenience
+      - show confidence as score x/100, not probability
+      - present at most three recommended candidates per agency by default
+      - show fallback when no direct professional contact exists
+outputs:
+  - ContactResearchRun
+  - ContactCandidate[]
+  - ranked_contact_table

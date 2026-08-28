@@ -1,0 +1,55 @@
+schema_version: 1
+example: same_job_ad_and_independent_contract
+technology_target_id: tech-openshift
+agency_id: agency-example
+records:
+  - evidence_id: EV-001
+    source_type: job_ad_official
+    source_url: https://myndighet.example/jobb/123?utm_source=linkedin
+    canonical_source_url: https://myndighet.example/jobb/123
+    evidence_summary: Myndighetens egen jobbannons beskriver OpenShift som del av befintlig plattform.
+    directness: near_direct
+    usage_semantics: current_environment_explicit
+    match_class: exact_target
+    provenance:
+      origin_class: primary
+      original_source_status: is_original
+    deduplication:
+      document_duplicate_group: DG-001
+      claim_duplicate_group: CG-001
+      relationship: unique
+      canonical_evidence_id: EV-001
+  - evidence_id: EV-002
+    source_type: job_ad_aggregator
+    source_url: https://jobb.example/annons/abc
+    evidence_summary: Aggregatorn återpublicerar samma jobbannons.
+    directness: discovery_only
+    usage_semantics: current_environment_explicit
+    match_class: exact_target
+    provenance:
+      origin_class: secondary
+      original_source_status: links_to_original
+      origin_evidence_id: EV-001
+    deduplication:
+      document_duplicate_group: DG-001
+      claim_duplicate_group: CG-001
+      relationship: same_document_variant
+      canonical_evidence_id: EV-001
+  - evidence_id: EV-003
+    source_type: procurement_contract_or_calloff
+    source_url: https://upphandling.example/avrop/456
+    evidence_summary: Ett separat myndighetsspecifikt avrop gäller OpenShift-support.
+    directness: near_direct
+    usage_semantics: procurement_contract_or_calloff
+    match_class: exact_target
+    provenance:
+      origin_class: primary
+      original_source_status: is_original
+    deduplication:
+      document_duplicate_group: DG-002
+      claim_duplicate_group: CG-002
+      relationship: independent_corroboration
+      canonical_evidence_id: EV-003
+expected_interpretation:
+  independent_evidence_units: 2
+  note: EV-001 och EV-002 är samma beläggsenhet; EV-003 är separat corroboration.

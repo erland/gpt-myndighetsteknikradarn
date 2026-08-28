@@ -1,0 +1,18 @@
+id: EVAL-002
+title: Kubernetes är inte OpenShift
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: scoring_scenario
+  fixture: kubernetes_only
+expected:
+  required:
+  - display_category=trace
+  - score<=24
+  - underliggande teknik får inte bli direkt produktbevis
+  forbidden:
+  - OpenShift bekräftat
+  - OpenShift troligt
+scoring:
+  pass_threshold: 1.0

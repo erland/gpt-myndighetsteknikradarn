@@ -1,0 +1,137 @@
+schema_version: 1
+model: ResearchRun
+purpose: Canonical persistensmodell för en flerpassanalys som kan pausas, valideras och återupptas utan att redan genomfört arbete tappas eller dubbelräknas.
+required_fields:
+  - run_id
+  - target_snapshot
+  - scope_snapshot
+  - run_status
+  - agency_states
+  - counters
+  - pass_plan
+  - checkpoint_sequence
+fields:
+  run_id:
+    type: string
+    immutable: true
+  created_at:
+    type: datetime
+  updated_at:
+    type: datetime
+  run_status:
+    type: enum
+    values: [active, paused, complete, aborted]
+  target_snapshot:
+    type: object
+    purpose: Fryst identitet för TechnologyTarget vid körningens start.
+    required: [canonical_name, target_fingerprint]
+  scope_snapshot:
+    type: object
+    purpose: Fryst myndighetsurval för körningen.
+    required: [scope_profile, scoped_agency_ids, scope_fingerprint, registry_retrieved_date]
+  pass_plan:
+    type: object
+    fields:
+      required_passes: array_of_enum[screen, deepen, verify, negative_control, synthesize]
+      optional_passes: array_of_string
+      negative_control_required_for_no_trace: boolean
+  agency_states:
+    type: array
+    item: AgencyWorkState
+    identity_key: agency_id
+  counters:
+    type: object
+    required:
+      - scoped_agency_count
+      - analyzed_count
+      - not_analyzed_count
+      - likely_count
+      - trace_count
+      - no_trace_count
+      - unresolved_count
+    derived_from: agency_states
+  checkpoint_sequence:
+    type: integer
+    minimum: 0
+  last_checkpoint_id:
+    type: string_or_null
+  limitations:
+    type: array_of_string
+  event_log:
+    type: array
+    append_only: true
+    item:
+      fields:
+        event_id: string
+        occurred_at: datetime
+        event_type: string
+        agency_id: string_or_null
+        details: object
+AgencyWorkState:
+  required_fields:
+    - agency_id
+    - process_status
+    - passes
+    - evidence_refs
+    - revisit
+  fields:
+    agency_id: string
+    agency_name: string
+    ordinal:
+      type: integer
+      purpose: Stabil ordning från scope-snapshot; får inte ändras vid resume.
+    process_status:
+      type: enum
+      values:
+        - not_started
+        - in_progress
+        - screened
+        - deepened
+        - verified
+        - negative_controlled
+        - assessment_ready
+        - completed
+        - unresolved
+    passes:
+      type: object
+      fields:
+        screen: PassState
+        deepen: PassState
+        verify: PassState
+        negative_control: PassState
+        synthesize: PassState
+    evidence_refs:
+      type: array_of_string
+      deduplicate: true
+    assessment_ref:
+      type: string_or_null
+    outcome:
+      type: enum_or_null
+      values: [likely_or_confirmed, trace, no_trace_found, unresolved]
+    revisit:
+      type: object
+      fields:
+        required: boolean
+        reasons: array_of_enum[new_verified_alias, target_identity_correction, new_false_equivalence, contradiction, stale_evidence, verification_gap, manual_request, other]
+    last_error:
+      type: object_or_null
+      purpose: Fel får sparas utan att myndigheten felaktigt markeras som analyserad.
+PassState:
+  fields:
+    status:
+      type: enum
+      values: [not_required, pending, in_progress, complete, blocked]
+    attempts: integer
+    started_at: datetime_or_null
+    completed_at: datetime_or_null
+    notes: array_of_string
+invariants:
+  - exakt en AgencyWorkState per agency_id i scope_snapshot.scoped_agency_ids
+  - inga AgencyWorkState får finnas utanför scope_snapshot.scoped_agency_ids
+  - counters ska härledas från agency_states och får inte vara fristående sanning
+  - not_analyzed_count omfattar not_started och ofullständiga in_progress-tillstånd som ännu inte uppfyller screeningminimum
+  - analyzed_count omfattar endast myndigheter som uppfyller minimum screening
+  - outcome no_trace_found kräver genomförd screening och, när pass_plan kräver det, genomförd negativ kontroll
+  - completed myndighet får inte automatiskt öppnas igen utan revisit.required=true och registrerad orsak
+  - target_fingerprint och scope_fingerprint är immutabla inom samma run_id
+  - en förändring av målidentitet eller scope som påverkar medlemskap kräver explicit migration eller ny ResearchRun

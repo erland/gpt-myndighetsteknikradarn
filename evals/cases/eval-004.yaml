@@ -1,0 +1,16 @@
+id: EVAL-004
+title: Tilldelningsbeslut är inte driftbevis
+criticality: important
+profiles:
+- workflow_research_heavy
+input:
+  kind: scoring_scenario
+  fixture: award_without_runtime
+expected:
+  required:
+  - display_category=trace
+  - anskaffningsspår skiljs från faktisk drift
+  forbidden:
+  - direkt bekräftat
+scoring:
+  pass_threshold: 1.0

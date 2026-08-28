@@ -1,0 +1,106 @@
+schema_version: 1
+model: AgencyUniverse
+purpose: Definierar källa, snapshot, scope-profiler och räkneregler för svenska myndigheter i teknikkartläggningar.
+canonical_source:
+  name: SCB Allmänna myndighetsregistret
+  authority: Statistiska centralbyrån (SCB)
+  registry_url: https://myndighetsregistret.scb.se/
+  information_url: https://www.scb.se/vara-tjanster/oppna-data/myndighetsregistret/
+  legal_basis: SFS 2007:755
+  update_frequency: weekly
+  role: authoritative_universe_source
+reference_snapshot:
+  retrieved_date: 2026-08-27
+  total_count: 449
+  groups:
+    - id: state_administrative_authorities
+      label_sv: Statliga förvaltningsmyndigheter
+      count: 244
+      agency_group: state_administrative_authority
+    - id: authorities_under_parliament
+      label_sv: Myndigheter under riksdagen
+      count: 5
+      agency_group: authority_under_parliament
+    - id: state_business_works
+      label_sv: Statliga affärsverk
+      count: 3
+      agency_group: state_business_works
+    - id: ap_funds
+      label_sv: AP-fonder
+      count: 6
+      agency_group: ap_fund
+    - id: courts_and_court_administration
+      label_sv: Sveriges domstolar samt Domstolsverket
+      count: 83
+      agency_group: court_or_court_administration
+    - id: foreign_missions
+      label_sv: Svenska utlandsmyndigheter
+      count: 108
+      agency_group: foreign_mission
+  snapshot_is_runtime_truth: false
+  note: Antalen är referensvärden för projektutveckling och måste uppdateras från SCB när färsk täckning krävs.
+scope_profiles:
+  - id: technology_research_default
+    label_sv: Standard för teknikresearch
+    description: Basprofil som prioriterar självständiga svenska statsmyndigheter som rimligen kan analyseras som separata teknikmiljöer utan att automatiskt multiplicera enskilda domstolar och utlandsmyndigheter.
+    include_groups:
+      - state_administrative_authorities
+      - authorities_under_parliament
+      - state_business_works
+      - ap_funds
+    include_named_from_other_groups:
+      - Domstolsverket
+    reference_count_from_snapshot: 259
+    exclusions_to_report:
+      - individual_courts
+      - foreign_missions
+    default: true
+  - id: scb_full_registry
+    label_sv: Hela SCB:s myndighetsregister
+    description: Alla aktiva poster i SCB:s allmänna myndighetsregister. Använd när användaren uttryckligen vill ha full registertäckning.
+    include_groups:
+      - state_administrative_authorities
+      - authorities_under_parliament
+      - state_business_works
+      - ap_funds
+      - courts_and_court_administration
+      - foreign_missions
+    reference_count_from_snapshot: 449
+    default: false
+  - id: state_bodies_without_foreign_missions
+    label_sv: Statliga myndigheter exklusive utlandsmyndigheter
+    description: Hela SCB-registret utom svenska utlandsmyndigheter.
+    include_groups:
+      - state_administrative_authorities
+      - authorities_under_parliament
+      - state_business_works
+      - ap_funds
+      - courts_and_court_administration
+    reference_count_from_snapshot: 341
+    default: false
+  - id: custom
+    label_sv: Anpassat urval
+    description: Ett explicit användarvalt eller uppdragsdefinierat urval.
+    default: false
+runtime_refresh:
+  required_when:
+    - starting_a_new_broad_research_run
+    - user_requests_all_or_current_agencies
+    - stored_snapshot_is_older_than_30_days
+    - source_structure_or_counts_appear_changed
+  preferred_method:
+    - retrieve_current_SCB_registry_or_download
+    - store_registry_retrieved_date
+    - derive_scope_from_current_records
+  fallback_when_source_unavailable:
+    - use_latest_project_snapshot
+    - mark_universe_as_stale
+    - disclose_snapshot_date
+    - do_not_claim_current_full_coverage
+counting_invariants:
+  - scoped_agency_count equals the number of active unique Agency records included in the selected scope.
+  - analyzed_count includes only agencies for which minimum screening was actually completed.
+  - not_analyzed_count equals scoped_agency_count minus analyzed_count.
+  - not_analyzed must never be counted as no_trace_found.
+  - final outcome counts must reconcile to analyzed_count.
+  - scope exclusions must be disclosed when a profile narrower than scb_full_registry is used.

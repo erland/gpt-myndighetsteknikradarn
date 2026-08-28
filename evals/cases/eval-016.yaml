@@ -1,0 +1,19 @@
+id: EVAL-016
+title: Markdown PDF och Confluence bygger på samma fakta
+criticality: critical
+profiles:
+- workflow_research_heavy
+input:
+  kind: export_parity
+  analysis_fixture: examples/presentation-result.yaml
+  contacts_fixture: examples/contact-candidates.yaml
+expected:
+  required:
+  - samma coverage
+  - samma myndighetsordning
+  - samma säkerhetsvärden
+  - samma verifierade kontaktuppgifter
+  forbidden:
+  - ny research i exportfasen
+scoring:
+  pass_threshold: 1.0

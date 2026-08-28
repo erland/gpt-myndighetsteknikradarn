@@ -1,0 +1,125 @@
+schema_version: 1
+examples:
+  - id: strong_official_current_use
+    description: Två oberoende aktuella belägg, varav ett direkt från myndigheten.
+    expected_category: likely_or_confirmed
+    expected_min_score: 85
+    evidence:
+      - evidence_id: EV-1
+        agency_id: AG-1
+        technology_target_id: openshift
+        source_type: agency_official
+        source_url: https://example.se/tech
+        source_date: 2026-06-01
+        retrieved_date: 2026-08-27
+        evidence_summary: Myndigheten beskriver uttryckligen aktuell OpenShift-användning.
+        directness: direct
+        usage_semantics: current_use_explicit
+        match_class: exact_target
+        freshness: {band: very_recent, evaluated_at: 2026-08-27}
+        provenance: {origin_class: primary, original_source_status: is_original}
+        deduplication: {claim_duplicate_group: C1, relationship: unique}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true, date_verified: true}
+      - evidence_id: EV-2
+        agency_id: AG-1
+        technology_target_id: openshift
+        source_type: procurement_contract_or_calloff
+        source_url: https://example.se/contract
+        source_date: 2026-02-01
+        retrieved_date: 2026-08-27
+        evidence_summary: Separat myndighetsspecifikt avrop av OpenShift-support.
+        directness: near_direct
+        usage_semantics: procurement_contract_or_calloff
+        match_class: exact_target
+        freshness: {band: very_recent, evaluated_at: 2026-08-27}
+        provenance: {origin_class: primary, original_source_status: is_original}
+        deduplication: {claim_duplicate_group: C2, relationship: independent_corroboration}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true, date_verified: true}
+  - id: kubernetes_not_openshift
+    description: Underliggande Kubernetes-träff får inte göra OpenShift trolig.
+    expected_category: trace
+    expected_max_score: 24
+    evidence:
+      - evidence_id: EV-3
+        agency_id: AG-2
+        technology_target_id: openshift
+        source_type: agency_official
+        source_url: https://example.se/kubernetes
+        source_date: 2026-03-01
+        retrieved_date: 2026-08-27
+        evidence_summary: Myndigheten beskriver Kubernetes men inte OpenShift.
+        directness: direct
+        usage_semantics: current_environment_explicit
+        match_class: underlying_technology_only
+        freshness: {band: very_recent, evaluated_at: 2026-08-27}
+        provenance: {origin_class: primary, original_source_status: is_original}
+        deduplication: {claim_duplicate_group: C3, relationship: unique}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true, date_verified: true}
+  - id: duplicate_job_ads
+    description: Samma jobbannons i flera kanaler ska inte ge corroboration-bonus.
+    expected_max_score: 80
+    evidence:
+      - evidence_id: EV-4
+        agency_id: AG-3
+        technology_target_id: openshift
+        source_type: job_ad_official
+        source_url: https://example.se/job
+        source_date: 2026-05-01
+        retrieved_date: 2026-08-27
+        evidence_summary: Officiell annons beskriver befintlig OpenShift-miljö.
+        directness: near_direct
+        usage_semantics: current_environment_explicit
+        match_class: exact_target
+        freshness: {band: very_recent, evaluated_at: 2026-08-27}
+        provenance: {origin_class: primary, original_source_status: is_original}
+        deduplication: {claim_duplicate_group: C4, relationship: unique}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true, date_verified: true}
+      - evidence_id: EV-5
+        agency_id: AG-3
+        technology_target_id: openshift
+        source_type: job_ad_aggregator
+        source_url: https://jobs.example/job
+        source_date: 2026-05-01
+        retrieved_date: 2026-08-27
+        evidence_summary: Aggregator återpublicerar samma annons.
+        directness: discovery_only
+        usage_semantics: current_environment_explicit
+        match_class: exact_target
+        freshness: {band: very_recent, evaluated_at: 2026-08-27}
+        provenance: {origin_class: secondary, original_source_status: links_to_original}
+        deduplication: {claim_duplicate_group: C4, relationship: derivative_same_claim, canonical_evidence_id: EV-4}
+        verification: {original_opened: false, agency_identity_verified: true, technology_match_verified: true, date_verified: true}
+  - id: newer_decommission
+    description: Nyare explicit avveckling ska kraftigt sänka äldre användningsbelägg.
+    expected_max_score: 40
+    evidence:
+      - evidence_id: EV-6
+        agency_id: AG-4
+        technology_target_id: vmware
+        source_type: agency_official
+        source_url: https://example.se/old
+        source_date: 2022-01-01
+        retrieved_date: 2026-08-27
+        evidence_summary: Äldre dokument beskriver VMware-användning.
+        directness: direct
+        usage_semantics: historical_use
+        match_class: exact_target
+        freshness: {band: aging, evaluated_at: 2026-08-27}
+        provenance: {origin_class: primary, original_source_status: is_original}
+        deduplication: {claim_duplicate_group: C5, relationship: unique}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true, date_verified: true}
+      - evidence_id: EV-7
+        agency_id: AG-4
+        technology_target_id: vmware
+        source_type: agency_official
+        source_url: https://example.se/new
+        source_date: 2026-04-01
+        retrieved_date: 2026-08-27
+        evidence_summary: Ny myndighetskälla anger att VMware har avvecklats.
+        directness: direct
+        usage_semantics: decommission_or_replacement
+        match_class: exact_target
+        freshness: {band: very_recent, evaluated_at: 2026-08-27}
+        provenance: {origin_class: primary, original_source_status: is_original}
+        deduplication: {claim_duplicate_group: C6, relationship: unique}
+        verification: {original_opened: true, agency_identity_verified: true, technology_match_verified: true, date_verified: true}

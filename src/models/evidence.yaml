@@ -1,0 +1,144 @@
+schema_version: 1
+model: Evidence
+purpose: Canonical representation av en spårbar evidenspost för en myndighet och ett TechnologyTarget.
+required_fields:
+  - evidence_id
+  - agency_id
+  - technology_target_id
+  - source_type
+  - source_url
+  - retrieved_date
+  - evidence_summary
+  - directness
+  - usage_semantics
+  - match_class
+  - provenance
+fields:
+  evidence_id:
+    type: string
+    description: Stabil unik identifierare inom ResearchRun, exempelvis EV-SE-000123.
+  agency_id:
+    type: string
+    description: Referens till canonical Agency.
+  technology_target_id:
+    type: string
+    description: Referens till TechnologyTarget.
+  source_type:
+    type: enum
+    taxonomy: src/models/source-type.yaml
+  source_title:
+    type: string_or_null
+  source_url:
+    type: uri
+  canonical_source_url:
+    type: uri_or_null
+    description: Normaliserad URL för deduplicering; trackingparametrar och fragment tas bort när säkert.
+  source_owner:
+    type: string_or_null
+  source_owner_type:
+    type: enum
+    values: [agency, other_public_body, procurement_platform, vendor, media, individual, aggregator, unknown]
+  source_date:
+    type: date_or_null
+    description: Publicerings-, besluts-, avtals- eller dokumentdatum när känt.
+  retrieved_date:
+    type: date
+  evidence_summary:
+    type: string
+    description: Kort egen sammanfattning av vad källan faktiskt visar, utan att förstärka slutsatsen.
+  locator:
+    type: object_or_null
+    fields:
+      page: integer_or_null
+      section: string_or_null
+      heading: string_or_null
+      paragraph_or_anchor: string_or_null
+  directness:
+    type: enum
+    values: [direct, near_direct, indirect, discovery_only]
+    semantics:
+      direct: Källan uttrycker eller visar konkret användning av målprodukten hos rätt myndighet.
+      near_direct: Källan visar mycket nära koppling, exempelvis myndighetsspecifikt avrop eller befintlig miljö i jobbannons.
+      indirect: Källan ger en relevant signal men kräver inferens.
+      discovery_only: Källan hjälper att hitta originalbelägg men ska inte bära slutbedömning ensam.
+  usage_semantics:
+    type: enum
+    values:
+      - current_use_explicit
+      - current_environment_explicit
+      - implementation_or_migration
+      - procurement_contract_or_calloff
+      - procurement_award
+      - procurement_intent
+      - competence_requirement
+      - competence_merit
+      - historical_use
+      - decommission_or_replacement
+      - capability_or_interest_only
+      - unknown
+  match_class:
+    type: enum
+    source: src/models/technology-target.yaml
+    description: Relation mellan träffen och målprodukten, exempelvis exact_target eller underlying_technology.
+  freshness:
+    type: object
+    fields:
+      age_days: integer_or_null
+      band:
+        type: enum
+        values: [very_recent, recent, aging, old, unknown]
+      evaluated_at: date
+      note: string_or_null
+    note: Färskhet är metadata i steg 6. Exakt scoringeffekt införs i steg 7.
+  provenance:
+    type: object
+    required_fields: [origin_class, original_source_status]
+    fields:
+      origin_class:
+        type: enum
+        values: [primary, secondary, tertiary, unknown]
+      original_source_status:
+        type: enum
+        values: [is_original, links_to_original, quotes_original, derived_without_link, unknown]
+      origin_evidence_id:
+        type: string_or_null
+        description: Referens till evidenspost som identifierats som ursprung för samma uppgift.
+      origin_url:
+        type: uri_or_null
+      origin_note:
+        type: string_or_null
+  deduplication:
+    type: object
+    fields:
+      document_fingerprint: string_or_null
+      claim_fingerprint: string_or_null
+      document_duplicate_group: string_or_null
+      claim_duplicate_group: string_or_null
+      relationship:
+        type: enum
+        values: [unique, exact_document_duplicate, same_document_variant, derivative_same_claim, independent_corroboration, unresolved]
+      canonical_evidence_id: string_or_null
+  verification:
+    type: object
+    fields:
+      original_opened: boolean
+      agency_identity_verified: boolean
+      technology_match_verified: boolean
+      date_verified: boolean
+      notes: string_or_null
+  search_context:
+    type: object_or_null
+    fields:
+      search_family: string_or_null
+      query: string_or_null
+      pass: string_or_null
+  caveats:
+    type: array_of_string
+  notes:
+    type: string_or_null
+invariants:
+  - discovery_only får inte ensam bära en positiv slutbedömning när originalkälla rimligen kan granskas.
+  - exact_document_duplicate och same_document_variant ska normalt endast bidra en gång som självständigt belägg.
+  - derivative_same_claim ska inte räknas som oberoende corroboration när den kan spåras till samma ursprung.
+  - independent_corroboration kräver separat proveniens och får inte sättas enbart för att två URL:er skiljer sig.
+  - decommission_or_replacement är negativ/kontradiktorisk evidens och får inte tappas vid deduplicering.
