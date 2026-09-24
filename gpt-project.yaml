@@ -99,6 +99,12 @@ testing:
   automated_eval_runner: scripts/run_evals.py
   manual_eval_rubric: evals/manual/RUBRIC.md
   critical_eval_failure_blocks_release: true
+  manifest: tests/test-manifest.yaml
+  manifest_schema: schemas/test-manifest.schema.json
+  eval_case_schema: evals/schema/eval-case.schema.json
+  contract_validator: scripts/validate_gpt_builder_tests.py
+  automated_behavioral_evals_block_release: true
+  manual_runtime_evals_are_separate: true
 release:
   github:
     enabled: true
