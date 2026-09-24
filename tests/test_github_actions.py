@@ -51,3 +51,13 @@ def test_python_setup_cache_uses_actual_dependency_file_and_current_actions():
         assert 'actions/setup-python@v7' in text
         assert 'cache: pip' in text
         assert 'cache-dependency-path: requirements-dev.txt' in text
+
+
+def test_opencode_validator_uses_resolved_distribution_version():
+    validator = (ROOT / 'scripts/validate_opencode_runtime.py').read_text(encoding='utf-8')
+    assert 'ap.add_argument("--version")' in validator
+    assert 'version=args.version or cfg["project"]["version"]' in validator
+
+    for rel in ['.github/workflows/ci.yml', '.github/workflows/release.yml']:
+        text = (ROOT / rel).read_text(encoding='utf-8')
+        assert 'validate_opencode_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"' in text
