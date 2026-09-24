@@ -10,7 +10,7 @@ Den ursprungliga 15-stegs utvecklingsplanen är slutförd och lämnas oförändr
 
 - [x] Steg 1 – Stateful 1.5-projektmodell och plattformsneutrala kontrakt
 - [x] Steg 2 – Anpassa test/eval-kontrakt till GPT Byggaren 1.5
-- [ ] Steg 3 – OpenCode peer-runtime
+- [x] Steg 3 – OpenCode peer-runtime
 - [ ] Steg 4 – Runtime parity och modern releaseleverans
 - [ ] Steg 5 – Slutregression, hygiene och reproducerbar release
 
@@ -18,7 +18,7 @@ Den ursprungliga 15-stegs utvecklingsplanen är slutförd och lämnas oförändr
 
 - ChatGPT Chat: ready / active
 - Custom GPT: ready / active, med reducerad exekveringsdeterminism
-- OpenCode: ready / planned
+- OpenCode: ready / active
 - Claude Projects: reduced / inactive
 - OpenAI Plugin: reduced / inactive
 
@@ -37,6 +37,10 @@ CI passerade den nya stateful GPT Builder 1.5-linten tillsammans med project hyg
 
 CI passerade GPT Builder 1.5-testmanifestet och kontraktsvalidatorn tillsammans med hela den befintliga sviten: 18 realistiska evalfall, varav 14 automatiska och 4 manuella runtime-evals. Den befintliga hårdare policyn är bevarad: alla automatiska evalfel blockerar CI/release, medan manuella runtime-evals hålls separat och bedöms enligt RUBRIC.md när runtime-release kräver det.
 
+## Verifiering av steg 3
+
+OpenCode-distributionen bygger och validerar i CI tillsammans med hela regressions- och evalkedjan. Runtimefiler ligger under `.opencode/myndighetsteknikradarn/`, auktoritativ ResearchRun/checkpoint-state under `.myndighetsteknikradarn-state/` och exporter under `myndighetsteknikradarn-output/`. Dessa ytor får inte användas som research-evidens. Färsk kartläggning kräver webbåtkomst; utan den får OpenCode endast analysera tillhandahållet material och måste redovisa begränsningen.
+
 ## Aktuellt steg
 
-**Steg 3 – OpenCode peer-runtime.**
+**Steg 4 – Runtime parity och modern releaseleverans.**
