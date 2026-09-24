@@ -122,9 +122,12 @@ release:
     release_workflow: .github/workflows/release.yml
     version_source: github_release_tag
     artifacts:
+    - project_zip
     - chat_zip
     - custom_gpt_zip
+    - opencode_zip
     - checksums
+    - delivery_manifest
 policies:
   research_workflow: src/policies/research-workflow.md
   technology_normalization: src/policies/technology-normalization.md
@@ -334,3 +337,18 @@ tools:
 ci:
   enabled: true
   workflow: .github/workflows/ci.yml
+
+runtime_parity:
+  model: runtime-parity.yaml
+  registered_runtimes:
+    - chatgpt_chat
+    - chatgpt_custom
+    - claude_project
+    - opencode
+    - openai_plugin
+  compared_categories:
+    - behavior
+    - capability
+    - artifact
+    - workspace_state
+    - tool
