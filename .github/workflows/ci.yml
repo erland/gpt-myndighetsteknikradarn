@@ -39,6 +39,9 @@ jobs:
           PYTHONDONTWRITEBYTECODE: '1'
         run: python -m pytest -q
 
+      - name: Validate GPT Builder test contract
+        run: python scripts/validate_gpt_builder_tests.py
+
       - name: Run realistic evals
         env:
           PYTHONDONTWRITEBYTECODE: '1'
