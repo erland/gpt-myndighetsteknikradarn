@@ -180,6 +180,20 @@ def lint(root: Path) -> dict:
         if not (root / rel).exists():
             findings.append(finding("GP257", "error", "GPT Builder 1.5 contract schema missing", rel))
 
+    opencode = cfg.get("runtime", {}).get("opencode", {})
+    if opencode:
+        if opencode.get("enabled") is not True:
+            findings.append(finding("GP260", "error", "OpenCode peer runtime must be enabled"))
+        if opencode.get("mode") != "opencode_workspace":
+            findings.append(finding("GP261", "error", "OpenCode runtime mode must be opencode_workspace"))
+        if opencode.get("runtime_root") != ".opencode/myndighetsteknikradarn":
+            findings.append(finding("GP262", "error", "OpenCode runtime root differs"))
+        if opencode.get("state_root") != ".myndighetsteknikradarn-state":
+            findings.append(finding("GP263", "error", "OpenCode state root differs"))
+        for rel in ["scripts/build_opencode_runtime.py", "scripts/validate_opencode_runtime.py"]:
+            if not (root / rel).exists():
+                findings.append(finding("GP264", "error", "OpenCode runtime script missing", rel))
+
     testing = cfg.get("testing", {})
     if testing.get("automated_behavioral_evals_block_release") is not True:
         findings.append(finding("GP298", "error", "Automated behavioral evals must block release"))
