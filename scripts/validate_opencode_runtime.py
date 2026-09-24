@@ -5,9 +5,12 @@ from pathlib import Path
 import yaml
 
 def main()->int:
-    ap=argparse.ArgumentParser(); ap.add_argument("--project-root",default="."); args=ap.parse_args()
+    ap=argparse.ArgumentParser()
+    ap.add_argument("--project-root",default=".")
+    ap.add_argument("--version")
+    args=ap.parse_args()
     root=Path(args.project_root).resolve(); cfg=yaml.safe_load((root/"gpt-project.yaml").read_text(encoding="utf-8"))
-    version=cfg["project"]["version"]; build=root/"build"/"opencode"; errors=[]
+    version=args.version or cfg["project"]["version"]; build=root/"build"/"opencode"; errors=[]
     required=[
       "AGENTS.md","opencode.json","README.md","VERSION","MANIFEST.json",
       ".opencode/myndighetsteknikradarn/runtime-contract.json",
