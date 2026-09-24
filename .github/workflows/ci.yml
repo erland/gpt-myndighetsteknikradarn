@@ -68,6 +68,12 @@ jobs:
       - name: Build Custom GPT ZIP
         run: python scripts/build_custom_gpt_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"
 
+      - name: Build OpenCode ZIP
+        run: python scripts/build_opencode_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"
+
+      - name: Validate OpenCode runtime
+        run: python scripts/validate_opencode_runtime.py --project-root .
+
       - name: Validate built distributions
         run: python scripts/validate_distributions.py --project-root .
 
