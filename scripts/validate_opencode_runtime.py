@@ -11,6 +11,7 @@ def main()->int:
     required=[
       "AGENTS.md","opencode.json","README.md","VERSION","MANIFEST.json",
       ".opencode/myndighetsteknikradarn/runtime-contract.json",
+      ".opencode/myndighetsteknikradarn/platform-contract.json",
       ".opencode/myndighetsteknikradarn/instructions/canonical.md",
       ".opencode/myndighetsteknikradarn/src/models/research-run.yaml",
       ".opencode/myndighetsteknikradarn/src/models/research-checkpoint.yaml",
