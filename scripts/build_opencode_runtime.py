@@ -96,6 +96,7 @@ def main()->int:
         "pdf":"requires project export dependencies"
       }
     }
+    copy_file(root/"runtime-contracts/opencode.json", runtime/"platform-contract.json")
     (runtime/"runtime-contract.json").parent.mkdir(parents=True,exist_ok=True)
     (runtime/"runtime-contract.json").write_text(json.dumps(contract,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 
