@@ -8,7 +8,7 @@ Den ursprungliga 15-stegs utvecklingsplanen är slutförd och lämnas oförändr
 
 ## Migrationssteg
 
-- [ ] Steg 1 – Stateful 1.5-projektmodell och plattformsneutrala kontrakt
+- [x] Steg 1 – Stateful 1.5-projektmodell och plattformsneutrala kontrakt
 - [ ] Steg 2 – Anpassa test/eval-kontrakt till GPT Byggaren 1.5
 - [ ] Steg 3 – OpenCode peer-runtime
 - [ ] Steg 4 – Runtime parity och modern releaseleverans
@@ -29,8 +29,10 @@ Den ursprungliga 15-stegs utvecklingsplanen är slutförd och lämnas oförändr
 - `resume-flow.yaml` härleder räknare och nästa arbete från state i stället för att lita på stale cursors.
 - färdiga myndigheter öppnas inte igen utan explicit revisit-orsak.
 
+## Verifiering av steg 1
+
+CI passerade den nya stateful GPT Builder 1.5-linten tillsammans med project hygiene, hela regressionssviten, de realistiska evalsen, Chat ZIP, Custom GPT, distributionsvalidering och checksumkontroll. Researchbeteendet är oförändrat.
+
 ## Aktuellt steg
 
-**Steg 1 – Stateful 1.5-projektmodell och plattformsneutrala kontrakt.**
-
-Steget markeras inte klart förrän den nya linten och hela befintliga CI-kedjan passerar.
+**Steg 2 – Anpassa test/eval-kontrakt till GPT Byggaren 1.5.**
