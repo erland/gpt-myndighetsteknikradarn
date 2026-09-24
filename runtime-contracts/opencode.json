@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "behavior": {
+    "canonical": "src/instructions/canonical.md",
+    "research_workflow": "src/workflows/research-flow.yaml",
+    "resume_workflow": "src/workflows/resume-flow.yaml",
+    "stateful": true
+  },
+  "capabilities": {
+    "web": "required",
+    "filesystem_read": "required",
+    "filesystem_write": "recommended",
+    "shell": "recommended",
+    "code_execution": "recommended",
+    "structured_data": "required",
+    "persistent_state": "required"
+  },
+  "artifacts": {
+    "research_result": "required",
+    "research_state": "required",
+    "research_checkpoint": "conditional",
+    "contact_result": "conditional",
+    "markdown_export": "optional",
+    "pdf_export": "optional",
+    "confluence_export": "optional",
+    "runtime_package": "required",
+    "project_package": "required"
+  },
+  "workspace_state": {
+    "workspace": "required",
+    "separate_from_assistant": true,
+    "state": "required",
+    "authority": "workspace_file",
+    "model": "src/models/research-run.yaml",
+    "checkpoint_model": "src/models/research-checkpoint.yaml"
+  },
+  "tools": {
+    "eval_runner": "required",
+    "report_export": "recommended"
+  },
+  "runtime_id": "opencode",
+  "adapter": {
+    "mode": "opencode_workspace",
+    "state_storage": ".myndighetsteknikradarn-state/research-run.yaml",
+    "web_research": "required_for_fresh_mapping",
+    "deterministic_tools": "local",
+    "runtime_root": ".opencode/myndighetsteknikradarn"
+  }
+}
