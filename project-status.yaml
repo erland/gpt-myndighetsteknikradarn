@@ -8,14 +8,15 @@ plan:
   total_steps: 5
   historical_plan: docs/development-plan.md
 progress:
-  current_phase: gpt-builder-1.5-migration
+  current_phase: maintenance
   current_step: 5
-  last_completed_step: 4
+  last_completed_step: 5
   completed_steps:
     - 1
     - 2
     - 3
     - 4
+    - 5
   skipped_steps: []
   inserted_steps: []
 state:
@@ -25,11 +26,25 @@ state:
     - Custom GPT har hög metodparitet men reducerad determinism för scriptstödd scoring, coverage, checkpointing och PDF-export.
 validation:
   last_result: pass
-  details: Full regression och evals passerade tillsammans med Chat/Custom/OpenCode, Project ZIP, fem-runtime parity, gemensamma checksummor, delivery manifest och release readiness.
+  details: Full regression, 18 realistiska evals, Chat/Custom/OpenCode, Project ZIP, runtime parity, release readiness, final project hygiene, workflow parity och reproducerbar release passerade.
+project_hygiene:
+  last_result: pass
+  details: Genererade build/dist-artefakter är ignorerade och inga sådana artefakter är versionshanterade.
+release:
+  state: ready
+  version: 1.0.2
+  artifacts:
+    - project_zip
+    - chat_zip
+    - custom_gpt_zip
+    - opencode_zip
+    - sha256_checksums
+    - delivery_manifest
+  note: GPT Builder 1.5.0-migreringen är klar och PR:n är redo att mergeas.
 next_step:
-  recommended: 5
-  title: Slutregression, hygiene och reproducerbar release
-  reason: Runtime parity och komplett GPT Builder-releaseleverans är CI-verifierade; återstår final hygiene, workflow parity och reproducerbarhet.
+  recommended: null
+  title: Maintenance
+  reason: Alla migrationssteg 1–5 är klara och verifierade.
 resume:
   supported: true
   required_files:
@@ -38,8 +53,4 @@ resume:
     - docs/gpt-builder-1.5-migration-plan.md
     - STATUS.md
     - PROJECT.md
-  human_readable_status: Steg 4 är klart och CI-verifierat. Fortsätt med steg 5.
-release:
-  state: stable_before_migration
-  version: 1.0.2
-  maintenance_mode_before_migration: true
+  human_readable_status: Migreringen till GPT Byggaren 1.5.0 är klar. Projektet är i maintenance-läge.
