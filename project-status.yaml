@@ -9,20 +9,24 @@ plan:
   historical_plan: docs/development-plan.md
 progress:
   current_phase: gpt-builder-1.5-migration
-  current_step: 1
-  last_completed_step: 0
-  completed_steps: []
+  current_step: 2
+  last_completed_step: 1
+  completed_steps:
+    - 1
   skipped_steps: []
   inserted_steps: []
 state:
-  overall: in_progress
+  overall: pass
   blocking_issues: []
   warnings:
     - Custom GPT har hög metodparitet men reducerad determinism för scriptstödd scoring, coverage, checkpointing och PDF-export.
+validation:
+  last_result: pass
+  details: GPT Builder 1.5-lint, project hygiene, regressionstester, realistiska evals, Chat/Custom-build, distributionsvalidering och checksummor passerade.
 next_step:
-  recommended: 1
-  title: Stateful 1.5-projektmodell och plattformsneutrala kontrakt
-  reason: Projektet har redan ResearchRun/checkpoint/resume och mogna evals men saknar fullt GPT Builder 1.5-kontraktslager.
+  recommended: 2
+  title: Anpassa test/eval-kontrakt till GPT Byggaren 1.5
+  reason: Stateful 1.5-kontraktslagret är CI-verifierat; nästa steg är att registrera befintliga regressionstester och evals i GPT Builder 1.5-testmodellen.
 resume:
   supported: true
   required_files:
@@ -31,7 +35,7 @@ resume:
     - docs/gpt-builder-1.5-migration-plan.md
     - STATUS.md
     - PROJECT.md
-  human_readable_status: GPT Builder 1.5-migreringen har startat. Steg 1 inväntar CI-verifiering.
+  human_readable_status: Steg 1 är klart och CI-verifierat. Fortsätt med steg 2.
 release:
   state: stable_before_migration
   version: 1.0.2
