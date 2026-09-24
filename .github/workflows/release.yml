@@ -93,7 +93,7 @@ jobs:
         run: python scripts/build_opencode_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"
 
       - name: Validate OpenCode runtime
-        run: python scripts/validate_opencode_runtime.py --project-root .
+        run: python scripts/validate_opencode_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"
 
       - name: Build Project ZIP from release tag
         run: python scripts/build_project_package.py --project-root . --version "${{ steps.version.outputs.version }}"
