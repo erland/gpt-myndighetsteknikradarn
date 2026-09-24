@@ -1,25 +1,36 @@
 # Status – Myndighetsteknikradarn
 
-**Version:** 1.0.2  
-**Utvecklingsplan:** 15/15 steg genomförda  
-**Tillstånd:** Stabil release – maintenance mode
+**Produktversion:** 1.0.2  
+**Migration:** GPT Byggaren 1.5.0  
+**Tillstånd:** Migration pågår
 
-## Genomfört
+Den ursprungliga 15-stegs utvecklingsplanen är slutförd och lämnas oförändrad som projekthistorik. Den nya 1.5-migreringen är en separat behavior-preserving modernisering av projekt- och runtime-modellen.
 
-- Steg 1–15 är genomförda.
-- `1.0.0-rc.1` provades i faktisk användning utan blockerande problem och blev stabil `1.0.0`.
-- `1.0.2` kompletterar projektet med GitHub Actions för CI-validering och releasebyggnad; runtimebeteendet är oförändrat.
-- Chat ZIP och Custom GPT-distribution kan byggas lokalt eller automatiskt via GitHub Actions.
+## Migrationssteg
 
-## GitHub Actions
+- [ ] Steg 1 – Stateful 1.5-projektmodell och plattformsneutrala kontrakt
+- [ ] Steg 2 – Anpassa test/eval-kontrakt till GPT Byggaren 1.5
+- [ ] Steg 3 – OpenCode peer-runtime
+- [ ] Steg 4 – Runtime parity och modern releaseleverans
+- [ ] Steg 5 – Slutregression, hygiene och reproducerbar release
 
-- `.github/workflows/ci.yml`: lint, hygiene, regressionstester, realistiska evals, byggnad och validering av båda distributionerna på PR/push/manuell körning.
-- `.github/workflows/release.yml`: samma gates vid publicerad GitHub Release, versionsnummer från release-taggen och uppladdning av ZIP + SHA-256 som release assets.
+## Runtime-bedömning
 
-## Projektstädning
+- ChatGPT Chat: ready / active
+- Custom GPT: ready / active, med reducerad exekveringsdeterminism
+- OpenCode: ready / planned
+- Claude Projects: reduced / inactive
+- OpenAI Plugin: reduced / inactive
 
-Historiska stegvisa rapporter, genererade build/dist-kataloger och cachefiler ingår inte i canonical projekt. Runtime-testerna använder projektets aktuella version i stället för hårdkodade äldre utvecklingsversioner.
+## Stateful grund
 
-## Kända begränsningar
+- `ResearchRun` är auktoritativt research-state.
+- `ResearchCheckpoint` är atomisk validerbar snapshot för pause/resume.
+- `resume-flow.yaml` härleder räknare och nästa arbete från state i stället för att lita på stale cursors.
+- färdiga myndigheter öppnas inte igen utan explicit revisit-orsak.
 
-Custom GPT har hög metodparitet men mindre determinism än Chat ZIP för scriptstödd scoring, coverage och checkpointing. PDF-export i Custom GPT är beroende av att dataanalys/kodexekvering är tillgänglig.
+## Aktuellt steg
+
+**Steg 1 – Stateful 1.5-projektmodell och plattformsneutrala kontrakt.**
+
+Steget markeras inte klart förrän den nya linten och hela befintliga CI-kedjan passerar.
