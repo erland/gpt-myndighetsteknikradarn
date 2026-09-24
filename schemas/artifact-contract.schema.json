@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Platform-neutral Artifact Contract",
+  "type":"object",
+  "required":["contract_version","outputs"],
+  "properties":{
+    "contract_version":{"type":"integer","const":1},
+    "schema":{"type":"string"},
+    "outputs":{"type":"object","minProperties":1}
+  },
+  "additionalProperties":true
+}

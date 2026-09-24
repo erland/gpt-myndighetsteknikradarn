@@ -89,3 +89,27 @@ Custom GPT är sekundär runtime. Den kompilerade distributionen använder en in
 ## Release candidate
 
 Version `1.0.2` är den första stabila releasen efter slutförd utvecklingsplan steg 1–15 och godkänd RC-provning. Se `docs/stable-release.md` för releasegates och kända begränsningar.
+
+
+## GPT Byggaren 1.5-migrering
+
+Den ursprungliga produktutvecklingen steg 1–15 är avslutad. Migreringen till GPT Byggaren 1.5.0 är en separat, behavior-preserving modernisering.
+
+Projektet klassas som `stateful` eftersom större kartläggningar använder persistent `ResearchRun`, atomiska `ResearchCheckpoint` och deterministic resume.
+
+Runtime-mål:
+
+- ChatGPT Chat – ready / active
+- Custom GPT – ready / active
+- OpenCode – ready / active
+- Claude Projects – reduced / inactive
+- OpenAI Plugin – reduced / inactive
+
+Migreringsplan: `docs/gpt-builder-1.5-migration-plan.md`.
+
+
+## Runtime parity och releaseleverans
+
+- Runtime parity: `runtime-parity.yaml`
+- Runtime contracts: `runtime-contracts/`
+- GitHub Release bygger Project, Chat, Custom GPT och OpenCode samt gemensamma SHA-256-checksummor och delivery manifest.

@@ -141,8 +141,81 @@ def lint(root: Path) -> dict:
             findings.append(finding("GP210", "warning",
                 "Identical Markdown files detected: " + ", ".join(paths)))
 
+    robustness = cfg.get("model_robustness", {})
+    if robustness:
+        if robustness.get("level") != "stateful":
+            findings.append(finding("GP250", "error", "GPT Builder 1.5 migration requires stateful robustness"))
+        for key in ["operational_core", "explicit_workflow", "deterministic_gates",
+                    "authoritative_structured_state", "resume_recovery"]:
+            if robustness.get(key) is not True:
+                findings.append(finding("GP251", "error", f"Stateful robustness flag must be true: {key}"))
+
+    candidates = {
+        item.get("runtime_id"): item
+        for item in cfg.get("analysis", {}).get("runtime", {}).get("candidates", [])
+        if isinstance(item, dict)
+    }
+    expected_runtimes = {"chatgpt_chat", "chatgpt_custom", "claude_project", "opencode", "openai_plugin"}
+    if candidates and set(candidates) != expected_runtimes:
+        findings.append(finding("GP252", "error", "All five GPT Builder peer runtimes must be assessed"))
+
+    ws = cfg.get("workspace_state", {})
+    state = ws.get("state", {})
+    if ws:
+        if state.get("authority") != "workspace_file":
+            findings.append(finding("GP253", "error", "Stateful project must use workspace_file as state authority"))
+        if state.get("model") != "src/models/research-run.yaml":
+            findings.append(finding("GP254", "error", "ResearchRun must be the authoritative state model"))
+        if state.get("checkpoint_model") != "src/models/research-checkpoint.yaml":
+            findings.append(finding("GP255", "error", "ResearchCheckpoint must be the checkpoint model"))
+        if state.get("resume_workflow") != "src/workflows/resume-flow.yaml":
+            findings.append(finding("GP256", "error", "Resume workflow must remain registered"))
+
+    for rel in [
+        "schemas/capability-contract.schema.json",
+        "schemas/artifact-contract.schema.json",
+        "schemas/workspace-state-contract.schema.json",
+        "schemas/tool-contract.schema.json",
+    ]:
+        if not (root / rel).exists():
+            findings.append(finding("GP257", "error", "GPT Builder 1.5 contract schema missing", rel))
+
+    opencode = cfg.get("runtime", {}).get("opencode", {})
+    if opencode:
+        if opencode.get("enabled") is not True:
+            findings.append(finding("GP260", "error", "OpenCode peer runtime must be enabled"))
+        if opencode.get("mode") != "opencode_workspace":
+            findings.append(finding("GP261", "error", "OpenCode runtime mode must be opencode_workspace"))
+        if opencode.get("runtime_root") != ".opencode/myndighetsteknikradarn":
+            findings.append(finding("GP262", "error", "OpenCode runtime root differs"))
+        if opencode.get("state_root") != ".myndighetsteknikradarn-state":
+            findings.append(finding("GP263", "error", "OpenCode state root differs"))
+        for rel in ["scripts/build_opencode_runtime.py", "scripts/validate_opencode_runtime.py"]:
+            if not (root / rel).exists():
+                findings.append(finding("GP264", "error", "OpenCode runtime script missing", rel))
+
+    parity = cfg.get("runtime_parity", {})
+    if parity:
+        if parity.get("model") != "runtime-parity.yaml":
+            findings.append(finding("GP270", "error", "Runtime parity model not registered"))
+        if set(parity.get("registered_runtimes", [])) != expected_runtimes:
+            findings.append(finding("GP271", "error", "Runtime parity must register all five runtimes"))
+        if set(parity.get("compared_categories", [])) != {"behavior","capability","artifact","workspace_state","tool"}:
+            findings.append(finding("GP272", "error", "Runtime parity categories differ"))
+        for rel in ["runtime-parity.yaml","runtime-contracts/chatgpt-chat.json","runtime-contracts/chatgpt-custom.json","runtime-contracts/opencode.json",
+                    "scripts/build_project_package.py","scripts/generate_release_checksums.py","scripts/build_delivery_manifest.py",
+                    "scripts/validate_runtime_parity.py","scripts/validate_release_readiness.py"]:
+            if not (root / rel).exists():
+                findings.append(finding("GP273", "error", "Parity/release file missing", rel))
+
     testing = cfg.get("testing", {})
-    for key in ["manifest", "manifest_schema", "eval_case_schema"]:
+    if testing.get("automated_behavioral_evals_block_release") is not True:
+        findings.append(finding("GP298", "error", "Automated behavioral evals must block release"))
+    if testing.get("manual_runtime_evals_are_separate") is not True:
+        findings.append(finding("GP299", "error", "Manual runtime evals must be explicitly separated"))
+    if testing.get("contract_validator") != "scripts/validate_gpt_builder_tests.py":
+        findings.append(finding("GP300", "error", "GPT Builder test contract validator is not registered"))
+    for key in ["manifest", "manifest_schema", "eval_case_schema", "contract_validator"]:
         ref = testing.get(key)
         if ref and not (root / ref).exists():
             findings.append(finding("GP300", "error", f"Testing {key} missing", ref))
@@ -155,8 +228,10 @@ def lint(root: Path) -> dict:
             findings.append(finding("GP400", "error", "CI workflow missing", wf))
         else:
             text = p.read_text(encoding="utf-8")
-            if "build_distributions.py" not in text:
-                findings.append(finding("GP401", "error", "CI does not invoke build_distributions.py", wf))
+            builders = ["build_chat_runtime.py", "build_custom_gpt_runtime.py"]
+            for builder in builders:
+                if builder not in text:
+                    findings.append(finding("GP401", "error", f"CI does not invoke {builder}", wf))
             if "validate_distributions.py" not in text:
                 findings.append(finding("GP402", "error", "CI does not invoke validate_distributions.py", wf))
 

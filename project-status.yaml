@@ -2,56 +2,55 @@ schema_version: 1
 project:
   id: myndighetsteknikradarn
   name: Myndighetsteknikradarn
+  product_version: 1.0.2
 plan:
-  path: docs/development-plan.md
-  total_steps: 15
+  path: docs/gpt-builder-1.5-migration-plan.md
+  total_steps: 5
+  historical_plan: docs/development-plan.md
 progress:
-  current_phase: Stabil release och maintenance
-  current_step: 15
-  last_completed_step: 15
+  current_phase: maintenance
+  current_step: 5
+  last_completed_step: 5
   completed_steps:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
-  - 11
-  - 12
-  - 13
-  - 14
-  - 15
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
   skipped_steps: []
   inserted_steps: []
 state:
   overall: pass
   blocking_issues: []
   warnings:
-  - Custom GPT har hög metodparitet men reducerad determinism för scriptstödd scoring/coverage/checkpointing;
-    PDF kräver dataanalys/kodexekvering.
+    - Custom GPT har hög metodparitet men reducerad determinism för scriptstödd scoring, coverage, checkpointing och PDF-export.
+validation:
+  last_result: pass
+  details: Full regression, 18 realistiska evals, Chat/Custom/OpenCode, Project ZIP, runtime parity, release readiness, final project hygiene, workflow parity och reproducerbar release passerade.
+project_hygiene:
+  last_result: pass
+  details: Genererade build/dist-artefakter är ignorerade och inga sådana artefakter är versionshanterade.
+release:
+  state: ready
+  version: 1.0.2
+  artifacts:
+    - project_zip
+    - chat_zip
+    - custom_gpt_zip
+    - opencode_zip
+    - sha256_checksums
+    - delivery_manifest
+  note: GPT Builder 1.5.0-migreringen är klar och PR:n är redo att mergeas.
 next_step:
   recommended: null
   title: Maintenance
-  reason: Version 1.0.2 är stabil. GitHub Actions validerar projektet på PR/push och
-    bygger distributionspaket från GitHub Release-taggen.
+  reason: Alla migrationssteg 1–5 är klara och verifierade.
 resume:
   supported: true
   required_files:
-  - gpt-project.yaml
-  - project-status.yaml
-  - docs/development-plan.md
-  - STATUS.md
-  - PROJECT.md
-  human_readable_status: Version 1.0.2 är stabil och projektet är i maintenance mode.
-    Alla 15 utvecklingssteg är genomförda; CI/releaseautomatisering finns under .github/workflows.
-release:
-  state: stable
-  version: 1.0.2
-  promoted_from: 1.0.0
-  runtime_smoke_test: passed_on_1.0.0
-  maintenance_mode: true
-  github_actions: true
+    - gpt-project.yaml
+    - project-status.yaml
+    - docs/gpt-builder-1.5-migration-plan.md
+    - STATUS.md
+    - PROJECT.md
+  human_readable_status: Migreringen till GPT Byggaren 1.5.0 är klar. Projektet är i maintenance-läge.

@@ -1,0 +1,26 @@
+schema_version: 1
+suites:
+  regression:
+    type: deterministic
+    blocking: true
+    path: tests
+    commands:
+      - python -m pytest -q
+    description: Befintlig regressionssvit för modeller, scoring, export, checkpoint/resume, distributioner och workflows.
+
+  automated_behavioral_evals:
+    type: behavioral
+    blocking: true
+    path: evals/cases
+    manifest: evals/eval-manifest.yaml
+    runner: scripts/run_evals.py
+    commands:
+      - python scripts/run_evals.py --json
+    description: 14 deterministiskt körbara realistiska behavioral evals. Alla automatiska fel blockerar CI/release.
+
+  manual_runtime_evals:
+    type: manual_runtime
+    blocking: false
+    path: evals/manual
+    manifest: evals/eval-manifest.yaml
+    description: 4 manuella runtime-evals som bedöms mot faktisk Chat/Custom-runtime enligt RUBRIC.md före runtime-release där manifestregeln kräver det.

@@ -77,6 +77,7 @@ def main()->int:
     tpl=(root/cfg['runtime']['chat_zip']['start_here_template']).read_text(encoding='utf-8')
     start=tpl.replace('{{GPT_NAME}}',cfg['project']['name']).replace('{{VERSION}}',version)
     (out/'START-HERE.md').write_text(start,encoding='utf-8'); (out/'VERSION').write_text(version+'\n',encoding='utf-8')
+    shutil.copy2(root/'runtime-contracts/chatgpt-chat.json', out/'runtime-contract.json')
     (out/'RUNTIME.json').write_text(json.dumps({
         'runtime_id':cfg['project']['id']+'-chat','version':version,'language':cfg['project']['language'],
         'primary_instruction':'assistant/instructions.md','entrypoint':'START-HERE.md',

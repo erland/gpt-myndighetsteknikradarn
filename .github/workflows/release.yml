@@ -71,6 +71,9 @@ jobs:
           PYTHONDONTWRITEBYTECODE: '1'
         run: python -m pytest -q
 
+      - name: Validate GPT Builder test contract
+        run: python scripts/validate_gpt_builder_tests.py
+
       - name: Run realistic evals
         env:
           PYTHONDONTWRITEBYTECODE: '1'
@@ -86,6 +89,18 @@ jobs:
       - name: Build Custom GPT ZIP from release tag
         run: python scripts/build_custom_gpt_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"
 
+      - name: Build OpenCode ZIP from release tag
+        run: python scripts/build_opencode_runtime.py --project-root . --version "${{ steps.version.outputs.version }}"
+
+      - name: Validate OpenCode runtime
+        run: python scripts/validate_opencode_runtime.py --project-root .
+
+      - name: Build Project ZIP from release tag
+        run: python scripts/build_project_package.py --project-root . --version "${{ steps.version.outputs.version }}"
+
+      - name: Validate runtime parity
+        run: python scripts/validate_runtime_parity.py
+
       - name: Validate built distributions
         run: python scripts/validate_distributions.py --project-root .
 
@@ -95,6 +110,24 @@ jobs:
           cd dist
           sha256sum --check *.zip.sha256
 
+      - name: Generate release checksums
+        run: python scripts/generate_release_checksums.py --project-root . --version "${{ steps.version.outputs.version }}"
+
+      - name: Build delivery manifest
+        run: python scripts/build_delivery_manifest.py --project-root . --version "${{ steps.version.outputs.version }}"
+
+      - name: Validate release readiness
+        run: python scripts/validate_release_readiness.py --project-root . --version "${{ steps.version.outputs.version }}"
+
+      - name: Validate final project hygiene
+        run: python scripts/final_project_hygiene.py --project-root .
+
+      - name: Validate workflow parity
+        run: python scripts/validate_workflow_parity.py
+
+      - name: Verify reproducible release
+        run: python scripts/verify_reproducible_build.py --project-root . --version "${{ steps.version.outputs.version }}"
+
       - name: Upload workflow artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -102,6 +135,8 @@ jobs:
           path: |
             dist/*.zip
             dist/*.zip.sha256
+            dist/*-SHA256SUMS.txt
+            dist/*-DELIVERY-MANIFEST.json
           if-no-files-found: error
 
       - name: Upload files to published GitHub Release
@@ -109,7 +144,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.version.outputs.tag }}
-        run: gh release upload "$TAG" dist/*.zip dist/*.zip.sha256 --clobber
+        run: gh release upload "$TAG" dist/*.zip dist/*.zip.sha256 dist/*-SHA256SUMS.txt dist/*-DELIVERY-MANIFEST.json --clobber
 
       - name: Upload files to manually selected GitHub Release
         if: github.event_name == 'workflow_dispatch' && inputs.upload_to_release
@@ -120,4 +155,4 @@ jobs:
           if ! gh release view "$TAG" >/dev/null 2>&1; then
             TAG="${TAG#v}"
           fi
-          gh release upload "$TAG" dist/*.zip dist/*.zip.sha256 --clobber
+          gh release upload "$TAG" dist/*.zip dist/*.zip.sha256 dist/*-SHA256SUMS.txt dist/*-DELIVERY-MANIFEST.json --clobber

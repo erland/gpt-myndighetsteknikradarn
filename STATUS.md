@@ -1,25 +1,58 @@
 # Status – Myndighetsteknikradarn
 
-**Version:** 1.0.2  
-**Utvecklingsplan:** 15/15 steg genomförda  
-**Tillstånd:** Stabil release – maintenance mode
+**Produktversion:** 1.0.2  
+**Migration:** GPT Byggaren 1.5.0  
+**Tillstånd:** Maintenance
 
-## Genomfört
+Den ursprungliga 15-stegs utvecklingsplanen är slutförd och lämnas oförändrad som projekthistorik. Den nya 1.5-migreringen är en separat behavior-preserving modernisering av projekt- och runtime-modellen.
 
-- Steg 1–15 är genomförda.
-- `1.0.0-rc.1` provades i faktisk användning utan blockerande problem och blev stabil `1.0.0`.
-- `1.0.2` kompletterar projektet med GitHub Actions för CI-validering och releasebyggnad; runtimebeteendet är oförändrat.
-- Chat ZIP och Custom GPT-distribution kan byggas lokalt eller automatiskt via GitHub Actions.
+## Migrationssteg
 
-## GitHub Actions
+- [x] Steg 1 – Stateful 1.5-projektmodell och plattformsneutrala kontrakt
+- [x] Steg 2 – Anpassa test/eval-kontrakt till GPT Byggaren 1.5
+- [x] Steg 3 – OpenCode peer-runtime
+- [x] Steg 4 – Runtime parity och modern releaseleverans
+- [x] Steg 5 – Slutregression, hygiene och reproducerbar release
 
-- `.github/workflows/ci.yml`: lint, hygiene, regressionstester, realistiska evals, byggnad och validering av båda distributionerna på PR/push/manuell körning.
-- `.github/workflows/release.yml`: samma gates vid publicerad GitHub Release, versionsnummer från release-taggen och uppladdning av ZIP + SHA-256 som release assets.
+## Runtime-bedömning
 
-## Projektstädning
+- ChatGPT Chat: ready / active
+- Custom GPT: ready / active, med reducerad exekveringsdeterminism
+- OpenCode: ready / active
+- Claude Projects: reduced / inactive
+- OpenAI Plugin: reduced / inactive
 
-Historiska stegvisa rapporter, genererade build/dist-kataloger och cachefiler ingår inte i canonical projekt. Runtime-testerna använder projektets aktuella version i stället för hårdkodade äldre utvecklingsversioner.
+## Stateful grund
 
-## Kända begränsningar
+- `ResearchRun` är auktoritativt research-state.
+- `ResearchCheckpoint` är atomisk validerbar snapshot för pause/resume.
+- `resume-flow.yaml` härleder räknare och nästa arbete från state i stället för att lita på stale cursors.
+- färdiga myndigheter öppnas inte igen utan explicit revisit-orsak.
 
-Custom GPT har hög metodparitet men mindre determinism än Chat ZIP för scriptstödd scoring, coverage och checkpointing. PDF-export i Custom GPT är beroende av att dataanalys/kodexekvering är tillgänglig.
+## Verifiering av steg 1
+
+CI passerade den nya stateful GPT Builder 1.5-linten tillsammans med project hygiene, hela regressionssviten, de realistiska evalsen, Chat ZIP, Custom GPT, distributionsvalidering och checksumkontroll. Researchbeteendet är oförändrat.
+
+## Verifiering av steg 2
+
+CI passerade GPT Builder 1.5-testmanifestet och kontraktsvalidatorn tillsammans med hela den befintliga sviten: 18 realistiska evalfall, varav 14 automatiska och 4 manuella runtime-evals. Den befintliga hårdare policyn är bevarad: alla automatiska evalfel blockerar CI/release, medan manuella runtime-evals hålls separat och bedöms enligt RUBRIC.md när runtime-release kräver det.
+
+## Verifiering av steg 3
+
+OpenCode-distributionen bygger och validerar i CI tillsammans med hela regressions- och evalkedjan. Runtimefiler ligger under `.opencode/myndighetsteknikradarn/`, auktoritativ ResearchRun/checkpoint-state under `.myndighetsteknikradarn-state/` och exporter under `myndighetsteknikradarn-output/`. Dessa ytor får inte användas som research-evidens. Färsk kartläggning kräver webbåtkomst; utan den får OpenCode endast analysera tillhandahållet material och måste redovisa begränsningen.
+
+## Verifiering av steg 4
+
+CI passerade fem-runtime parity-modellen. Aktiva peer-runtimes är ChatGPT Chat, Custom GPT och OpenCode; Claude Projects och OpenAI Plugin är explicit reducerade/inaktiva. Releaseleveransen bygger nu Project ZIP, Chat ZIP, Custom GPT ZIP och OpenCode ZIP samt gemensamma SHA-256-checksummor och delivery manifest. Release readiness verifierar hela leveransmängden.
+
+## Verifiering av steg 5
+
+Slutkörningen passerade full regression, 18 realistiska evals, alla tre aktiva runtimes, Project ZIP, runtime parity, release readiness, final project hygiene, workflow parity och reproducerbarhetskontroll. Reproducerbarhetsgrinden byggde hela releaseleveransen två gånger och verifierade identiska SHA-256-hashar.
+
+## Aktuellt läge
+
+Migreringen till GPT Byggaren 1.5.0 är klar. Projektet är i **maintenance-läge** och PR:n är redo att mergeas.
+
+## Blockerare
+
+Inga.

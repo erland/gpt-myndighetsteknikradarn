@@ -87,6 +87,16 @@ runtime:
       block_on_instruction_limit: true
       block_on_knowledge_limit: true
       block_on_misleading_core_functionality: true
+  opencode:
+    enabled: true
+    role: peer_distribution
+    mode: opencode_workspace
+    builder: scripts/build_opencode_runtime.py
+    validator: scripts/validate_opencode_runtime.py
+    entrypoint: AGENTS.md
+    runtime_root: .opencode/myndighetsteknikradarn
+    state_root: .myndighetsteknikradarn-state
+    output_root: myndighetsteknikradarn-output
 exports:
   markdown: true
   pdf: true
@@ -99,6 +109,12 @@ testing:
   automated_eval_runner: scripts/run_evals.py
   manual_eval_rubric: evals/manual/RUBRIC.md
   critical_eval_failure_blocks_release: true
+  manifest: tests/test-manifest.yaml
+  manifest_schema: schemas/test-manifest.schema.json
+  eval_case_schema: evals/schema/eval-case.schema.json
+  contract_validator: scripts/validate_gpt_builder_tests.py
+  automated_behavioral_evals_block_release: true
+  manual_runtime_evals_are_separate: true
 release:
   github:
     enabled: true
@@ -106,9 +122,12 @@ release:
     release_workflow: .github/workflows/release.yml
     version_source: github_release_tag
     artifacts:
+    - project_zip
     - chat_zip
     - custom_gpt_zip
+    - opencode_zip
     - checksums
+    - delivery_manifest
 policies:
   research_workflow: src/policies/research-workflow.md
   technology_normalization: src/policies/technology-normalization.md
@@ -142,3 +161,194 @@ release_validation:
   hygiene_script: scripts/project_hygiene.py
   distribution_validator: scripts/validate_distributions.py
   stable_release_document: docs/stable-release.md
+
+migration:
+  target: gpt-builder-1.5.0
+  type: existing-project
+  preserve_domain_behavior: true
+  preserve_existing_chat_custom_builds_until_replaced: true
+
+model_robustness:
+  level: stateful
+  rationale: Stora kartläggningar använder explicit ResearchRun, atomiska ResearchCheckpoint och deterministic resume utan att redan genomfört arbete tappas eller dubbelräknas.
+  operational_core: true
+  explicit_workflow: true
+  deterministic_gates: true
+  authoritative_structured_state: true
+  resume_recovery: true
+  instruction_adherence_evals: true
+
+analysis:
+  runtime:
+    strategy: peer_candidates
+    candidates:
+      - runtime_id: chatgpt_chat
+        suitability: ready
+        activate_by_default: true
+        reason: Befintlig Chat ZIP bär hela researchmetoden och stöder flerpassarbete med filbaserad checkpointing.
+      - runtime_id: chatgpt_custom
+        suitability: ready
+        activate_by_default: true
+        reason: Metodpariteten är hög; exekveringsdeterminism för scoring, coverage, checkpointing och PDF är reducerad men kärnfunktionen är användbar.
+      - runtime_id: claude_project
+        suitability: reduced
+        activate_by_default: false
+        reason: Researchmetoden kan bäras men full persistent state och lokal deterministic toolchain saknas.
+      - runtime_id: opencode
+        suitability: ready
+        activate_by_default: true
+        reason: Lokal workspace, shell och scripts passar persistent ResearchRun/checkpoint, scoring, coverage och export.
+      - runtime_id: openai_plugin
+        suitability: reduced
+        activate_by_default: false
+        reason: Skills kan bära metodik men ger inte full workspace/state och lokal deterministic toolchain.
+
+capabilities:
+  contract_version: 1
+  schema: schemas/capability-contract.schema.json
+  requirements:
+    web:
+      level: required
+      reason: Kärnuppgiften kräver färsk evidensbaserad research och verifiering av originalkällor.
+    filesystem:
+      read: required
+      write: recommended
+    shell:
+      level: recommended
+      reason: Agent-runtimes använder scripts för checkpoint, scoring, evals och export.
+    code_execution:
+      level: recommended
+      reason: Behövs för deterministisk scoring, coverage, checkpointing och robust fil/PDF-export.
+    structured_data:
+      level: required
+      reason: TechnologyTarget, Evidence, AgencyAssessment, ResearchRun och checkpoint är strukturerade modeller.
+    persistent_state:
+      level: required
+      reason: Stora kartläggningar måste kunna pausas och återupptas utan kandidat- eller coverage-förlust.
+    external_tools:
+      level: optional
+    image_generation:
+      level: not_required
+
+artifacts:
+  contract_version: 1
+  schema: schemas/artifact-contract.schema.json
+  outputs:
+    research_result:
+      kind: report
+      format: markdown
+      requirement: required
+      persistence: persistent
+      multiplicity: one
+    research_state:
+      kind: data
+      format: yaml_or_json
+      requirement: required
+      persistence: persistent
+      multiplicity: one
+      description: Canonical ResearchRun med checkpointbar state.
+    research_checkpoint:
+      kind: data
+      format: yaml_or_json
+      requirement: conditional
+      condition: När arbetet pausas, batchas, delresultat visas eller export/kontaktresearch ska påbörjas.
+      persistence: persistent
+      multiplicity: many
+    contact_result:
+      kind: report
+      format: markdown
+      requirement: conditional
+      condition: När användaren begär kontaktpersonsresearch.
+      persistence: persistent
+      multiplicity: one
+    markdown_export:
+      kind: report
+      format: markdown
+      requirement: optional
+      persistence: persistent
+      multiplicity: one
+    pdf_export:
+      kind: document
+      format: pdf
+      requirement: optional
+      persistence: persistent
+      multiplicity: one
+    confluence_export:
+      kind: document
+      format: confluence
+      requirement: optional
+      persistence: persistent
+      multiplicity: one
+    runtime_package:
+      kind: distribution
+      format: zip
+      requirement: required
+      persistence: persistent
+      multiplicity: many
+    project_package:
+      kind: package
+      format: zip
+      requirement: required
+      persistence: persistent
+      multiplicity: one
+
+workspace_state:
+  contract_version: 1
+  schema: schemas/workspace-state-contract.schema.json
+  workspace:
+    requirement: required
+    persistence: preferred
+    portable: true
+    separate_from_assistant: true
+    description: Researchdata, checkpoint-state och exportresultat ska hållas separerade från runtimefiler.
+  state:
+    requirement: required
+    persistence: required
+    authority: workspace_file
+    model: src/models/research-run.yaml
+    checkpoint_model: src/models/research-checkpoint.yaml
+    resume_workflow: src/workflows/resume-flow.yaml
+    description: ResearchRun är auktoritativ state; checkpoints är validerbara snapshots och next_work får aldrig vara enda sanningen.
+  runtime_preferences:
+    chat: conversation_or_file
+    agent: workspace_file
+
+tools:
+  contract_version: 1
+  schema: schemas/tool-contract.schema.json
+  tools:
+    - id: eval-runner
+      type: script
+      requirement: required
+      purpose: Köra deterministic behavioral evals och release-blockerande regressioner.
+      script: scripts/run_evals.py
+      deterministic: true
+      mutates_workspace: false
+      runtime_fallback: manual
+    - id: report-export
+      type: script
+      requirement: recommended
+      purpose: Exportera samma canonical ResultPresentation till stödda format utan ny research.
+      script: scripts/export_report.py
+      deterministic: true
+      mutates_workspace: true
+      runtime_fallback: manual
+
+ci:
+  enabled: true
+  workflow: .github/workflows/ci.yml
+
+runtime_parity:
+  model: runtime-parity.yaml
+  registered_runtimes:
+    - chatgpt_chat
+    - chatgpt_custom
+    - claude_project
+    - opencode
+    - openai_plugin
+  compared_categories:
+    - behavior
+    - capability
+    - artifact
+    - workspace_state
+    - tool

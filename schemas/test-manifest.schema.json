@@ -1,0 +1,28 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"GPT Builder 1.5 Test Manifest",
+  "type":"object",
+  "required":["schema_version","suites"],
+  "properties":{
+    "schema_version":{"type":"integer","const":1},
+    "suites":{
+      "type":"object",
+      "minProperties":1,
+      "additionalProperties":{
+        "type":"object",
+        "required":["type","blocking"],
+        "properties":{
+          "type":{"enum":["deterministic","behavioral","manual_runtime"]},
+          "blocking":{"type":"boolean"},
+          "path":{"type":"string"},
+          "manifest":{"type":"string"},
+          "runner":{"type":"string"},
+          "commands":{"type":"array","items":{"type":"string"}},
+          "description":{"type":"string"}
+        },
+        "additionalProperties":false
+      }
+    }
+  },
+  "additionalProperties":false
+}
