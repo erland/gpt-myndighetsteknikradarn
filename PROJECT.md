@@ -101,7 +101,7 @@ Runtime-mål:
 
 - ChatGPT Chat – ready / active
 - Custom GPT – ready / active
-- OpenCode – ready / planned
+- OpenCode – ready / active
 - Claude Projects – reduced / inactive
 - OpenAI Plugin – reduced / inactive
 
