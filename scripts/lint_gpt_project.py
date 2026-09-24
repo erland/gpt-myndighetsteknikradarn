@@ -194,6 +194,20 @@ def lint(root: Path) -> dict:
             if not (root / rel).exists():
                 findings.append(finding("GP264", "error", "OpenCode runtime script missing", rel))
 
+    parity = cfg.get("runtime_parity", {})
+    if parity:
+        if parity.get("model") != "runtime-parity.yaml":
+            findings.append(finding("GP270", "error", "Runtime parity model not registered"))
+        if set(parity.get("registered_runtimes", [])) != expected_runtimes:
+            findings.append(finding("GP271", "error", "Runtime parity must register all five runtimes"))
+        if set(parity.get("compared_categories", [])) != {"behavior","capability","artifact","workspace_state","tool"}:
+            findings.append(finding("GP272", "error", "Runtime parity categories differ"))
+        for rel in ["runtime-parity.yaml","runtime-contracts/chatgpt-chat.json","runtime-contracts/chatgpt-custom.json","runtime-contracts/opencode.json",
+                    "scripts/build_project_package.py","scripts/generate_release_checksums.py","scripts/build_delivery_manifest.py",
+                    "scripts/validate_runtime_parity.py","scripts/validate_release_readiness.py"]:
+            if not (root / rel).exists():
+                findings.append(finding("GP273", "error", "Parity/release file missing", rel))
+
     testing = cfg.get("testing", {})
     if testing.get("automated_behavioral_evals_block_release") is not True:
         findings.append(finding("GP298", "error", "Automated behavioral evals must block release"))
