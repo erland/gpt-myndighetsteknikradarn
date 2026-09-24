@@ -181,7 +181,13 @@ def lint(root: Path) -> dict:
             findings.append(finding("GP257", "error", "GPT Builder 1.5 contract schema missing", rel))
 
     testing = cfg.get("testing", {})
-    for key in ["manifest", "manifest_schema", "eval_case_schema"]:
+    if testing.get("automated_behavioral_evals_block_release") is not True:
+        findings.append(finding("GP298", "error", "Automated behavioral evals must block release"))
+    if testing.get("manual_runtime_evals_are_separate") is not True:
+        findings.append(finding("GP299", "error", "Manual runtime evals must be explicitly separated"))
+    if testing.get("contract_validator") != "scripts/validate_gpt_builder_tests.py":
+        findings.append(finding("GP300", "error", "GPT Builder test contract validator is not registered"))
+    for key in ["manifest", "manifest_schema", "eval_case_schema", "contract_validator"]:
         ref = testing.get(key)
         if ref and not (root / ref).exists():
             findings.append(finding("GP300", "error", f"Testing {key} missing", ref))
