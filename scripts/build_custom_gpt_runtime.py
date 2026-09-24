@@ -94,6 +94,7 @@ def main()->int:
     if len(knowledge_files)>max_files: raise SystemExit(f'Too many knowledge files: {len(knowledge_files)} > {max_files}')
     cap='''# Rekommenderade capabilities\n\n- Webbsökning/browsing: **krävs** för färsk research.\n- Dataanalys/kodexekvering: **rekommenderas/krävs** för robust PDF- och filgenerering.\n- Bildgenerering: behövs inte för kärnfunktionen.\n'''; (builder/'capabilities.md').write_text(cap,encoding='utf-8')
     parity=(root/custom['parity_document']).read_text(encoding='utf-8'); (out/'COMPATIBILITY.md').write_text(parity,encoding='utf-8')
+    shutil.copy2(root/'runtime-contracts/chatgpt-custom.json', out/'runtime-contract.json')
     (out/'VERSION').write_text(version+'\n',encoding='utf-8')
     (out/'RUNTIME.json').write_text(json.dumps({
       'runtime_id':cfg['project']['id']+'-custom-gpt','version':version,'language':cfg['project']['language'],
