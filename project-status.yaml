@@ -9,12 +9,13 @@ plan:
   historical_plan: docs/development-plan.md
 progress:
   current_phase: gpt-builder-1.5-migration
-  current_step: 4
-  last_completed_step: 3
+  current_step: 5
+  last_completed_step: 4
   completed_steps:
     - 1
     - 2
     - 3
+    - 4
   skipped_steps: []
   inserted_steps: []
 state:
@@ -24,11 +25,11 @@ state:
     - Custom GPT har hög metodparitet men reducerad determinism för scriptstödd scoring, coverage, checkpointing och PDF-export.
 validation:
   last_result: pass
-  details: GPT Builder 1.5-lint, project hygiene, regressionstester, testkontraktsvalidering, 18 realistiska evals, Chat/Custom/OpenCode-build, OpenCode-validering, distributionsvalidering och checksummor passerade.
+  details: Full regression och evals passerade tillsammans med Chat/Custom/OpenCode, Project ZIP, fem-runtime parity, gemensamma checksummor, delivery manifest och release readiness.
 next_step:
-  recommended: 4
-  title: Runtime parity och modern releaseleverans
-  reason: OpenCode peer-runtime är byggd och CI-verifierad tillsammans med full regression; nästa steg är runtime parity och modern releaseleverans.
+  recommended: 5
+  title: Slutregression, hygiene och reproducerbar release
+  reason: Runtime parity och komplett GPT Builder-releaseleverans är CI-verifierade; återstår final hygiene, workflow parity och reproducerbarhet.
 resume:
   supported: true
   required_files:
@@ -37,7 +38,7 @@ resume:
     - docs/gpt-builder-1.5-migration-plan.md
     - STATUS.md
     - PROJECT.md
-  human_readable_status: Steg 3 är klart och CI-verifierat. Fortsätt med steg 4.
+  human_readable_status: Steg 4 är klart och CI-verifierat. Fortsätt med steg 5.
 release:
   state: stable_before_migration
   version: 1.0.2
