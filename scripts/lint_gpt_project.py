@@ -141,6 +141,45 @@ def lint(root: Path) -> dict:
             findings.append(finding("GP210", "warning",
                 "Identical Markdown files detected: " + ", ".join(paths)))
 
+    robustness = cfg.get("model_robustness", {})
+    if robustness:
+        if robustness.get("level") != "stateful":
+            findings.append(finding("GP250", "error", "GPT Builder 1.5 migration requires stateful robustness"))
+        for key in ["operational_core", "explicit_workflow", "deterministic_gates",
+                    "authoritative_structured_state", "resume_recovery"]:
+            if robustness.get(key) is not True:
+                findings.append(finding("GP251", "error", f"Stateful robustness flag must be true: {key}"))
+
+    candidates = {
+        item.get("runtime_id"): item
+        for item in cfg.get("analysis", {}).get("runtime", {}).get("candidates", [])
+        if isinstance(item, dict)
+    }
+    expected_runtimes = {"chatgpt_chat", "chatgpt_custom", "claude_project", "opencode", "openai_plugin"}
+    if candidates and set(candidates) != expected_runtimes:
+        findings.append(finding("GP252", "error", "All five GPT Builder peer runtimes must be assessed"))
+
+    ws = cfg.get("workspace_state", {})
+    state = ws.get("state", {})
+    if ws:
+        if state.get("authority") != "workspace_file":
+            findings.append(finding("GP253", "error", "Stateful project must use workspace_file as state authority"))
+        if state.get("model") != "src/models/research-run.yaml":
+            findings.append(finding("GP254", "error", "ResearchRun must be the authoritative state model"))
+        if state.get("checkpoint_model") != "src/models/research-checkpoint.yaml":
+            findings.append(finding("GP255", "error", "ResearchCheckpoint must be the checkpoint model"))
+        if state.get("resume_workflow") != "src/workflows/resume-flow.yaml":
+            findings.append(finding("GP256", "error", "Resume workflow must remain registered"))
+
+    for rel in [
+        "schemas/capability-contract.schema.json",
+        "schemas/artifact-contract.schema.json",
+        "schemas/workspace-state-contract.schema.json",
+        "schemas/tool-contract.schema.json",
+    ]:
+        if not (root / rel).exists():
+            findings.append(finding("GP257", "error", "GPT Builder 1.5 contract schema missing", rel))
+
     testing = cfg.get("testing", {})
     for key in ["manifest", "manifest_schema", "eval_case_schema"]:
         ref = testing.get(key)
@@ -155,8 +194,10 @@ def lint(root: Path) -> dict:
             findings.append(finding("GP400", "error", "CI workflow missing", wf))
         else:
             text = p.read_text(encoding="utf-8")
-            if "build_distributions.py" not in text:
-                findings.append(finding("GP401", "error", "CI does not invoke build_distributions.py", wf))
+            builders = ["build_chat_runtime.py", "build_custom_gpt_runtime.py"]
+            for builder in builders:
+                if builder not in text:
+                    findings.append(finding("GP401", "error", f"CI does not invoke {builder}", wf))
             if "validate_distributions.py" not in text:
                 findings.append(finding("GP402", "error", "CI does not invoke validate_distributions.py", wf))
 
