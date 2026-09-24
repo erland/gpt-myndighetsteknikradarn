@@ -87,6 +87,16 @@ runtime:
       block_on_instruction_limit: true
       block_on_knowledge_limit: true
       block_on_misleading_core_functionality: true
+  opencode:
+    enabled: true
+    role: peer_distribution
+    mode: opencode_workspace
+    builder: scripts/build_opencode_runtime.py
+    validator: scripts/validate_opencode_runtime.py
+    entrypoint: AGENTS.md
+    runtime_root: .opencode/myndighetsteknikradarn
+    state_root: .myndighetsteknikradarn-state
+    output_root: myndighetsteknikradarn-output
 exports:
   markdown: true
   pdf: true
