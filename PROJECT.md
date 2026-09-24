@@ -106,3 +106,10 @@ Runtime-mål:
 - OpenAI Plugin – reduced / inactive
 
 Migreringsplan: `docs/gpt-builder-1.5-migration-plan.md`.
+
+
+## Runtime parity och releaseleverans
+
+- Runtime parity: `runtime-parity.yaml`
+- Runtime contracts: `runtime-contracts/`
+- GitHub Release bygger Project, Chat, Custom GPT och OpenCode samt gemensamma SHA-256-checksummor och delivery manifest.
