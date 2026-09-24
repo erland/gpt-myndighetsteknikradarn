@@ -1,0 +1,12 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Platform-neutral Capability Contract",
+  "type":"object",
+  "required":["contract_version","requirements"],
+  "properties":{
+    "contract_version":{"type":"integer","const":1},
+    "schema":{"type":"string"},
+    "requirements":{"type":"object"}
+  },
+  "additionalProperties":true
+}
