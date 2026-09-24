@@ -1,0 +1,14 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "title":"Platform-neutral Workspace State Contract",
+  "type":"object",
+  "required":["contract_version","workspace","state"],
+  "properties":{
+    "contract_version":{"type":"integer","const":1},
+    "schema":{"type":"string"},
+    "workspace":{"type":"object"},
+    "state":{"type":"object"},
+    "runtime_preferences":{"type":"object"}
+  },
+  "additionalProperties":true
+}
