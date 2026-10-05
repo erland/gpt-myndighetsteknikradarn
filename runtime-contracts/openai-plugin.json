@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "behavior": {
+    "canonical": "src/instructions/canonical.md",
+    "research_workflow": "src/workflows/research-flow.yaml",
+    "resume_workflow": "src/workflows/resume-flow.yaml",
+    "stateful": true
+  },
+  "capabilities": {
+    "web": "required_host_capability_for_fresh_research",
+    "filesystem_read": "required_host_capability_for_file_research",
+    "filesystem_write": "required_host_capability_for_persistent_state",
+    "shell": "optional",
+    "code_execution": "recommended_host_capability_for_deterministic_scripts",
+    "structured_data": "required",
+    "persistent_state": "required_host_capability_for_cross_session_resume"
+  },
+  "artifacts": {
+    "research_result": "required",
+    "research_state": "required_when_persistent_state_available",
+    "research_checkpoint": "conditional",
+    "contact_result": "conditional",
+    "markdown_export": "optional",
+    "pdf_export": "optional_host_dependent",
+    "confluence_export": "optional",
+    "runtime_package": "required",
+    "project_package": "required"
+  },
+  "workspace_state": {
+    "workspace": "runtime_dependent",
+    "separate_from_assistant": true,
+    "state": "required_for_full_stateful_parity",
+    "authority": "workspace_file",
+    "model": "src/models/research-run.yaml",
+    "checkpoint_model": "src/models/research-checkpoint.yaml"
+  },
+  "tools": {
+    "eval_runner": "development_only_not_packaged",
+    "report_export": "packaged_script_resource",
+    "state_helpers": "packaged_script_resource",
+    "scoring": "packaged_script_resource",
+    "coverage": "packaged_script_resource"
+  },
+  "runtime_id": "openai_plugin",
+  "adapter": {
+    "mode": "skills_first",
+    "compatibility": "ready_runtime_dependent",
+    "entrypoint": "skills/myndighetsteknikradarn/SKILL.md",
+    "mcp_generated": false,
+    "web_research": "host_runtime",
+    "filesystem": "host_runtime",
+    "code_execution": "host_runtime",
+    "persistent_state": "host_runtime",
+    "packaged_runtime_scripts": [
+      "research_state.py",
+      "score_assessment.py",
+      "reconcile_coverage.py",
+      "deduplicate_evidence.py",
+      "generate_search_plan.py",
+      "render_result.py",
+      "rank_contacts.py",
+      "export_report.py"
+    ],
+    "excluded_development_resources": [
+      "tests/",
+      "evals/",
+      "docs/",
+      "scripts/run_evals.py",
+      "scripts/validate_*",
+      "scripts/build_*"
+    ]
+  }
+}
