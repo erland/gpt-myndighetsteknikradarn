@@ -13,6 +13,7 @@ def build(root:Path,version:str,target:Path)->dict:
       ["scripts/build_chat_runtime.py","--project-root",".","--version",version],
       ["scripts/build_custom_gpt_runtime.py","--project-root",".","--version",version],
       ["scripts/build_opencode_runtime.py","--project-root",".","--version",version],
+      ["scripts/build_plugin_runtime.py","--project-root",".","--version",version],
       ["scripts/build_project_package.py","--project-root",".","--version",version],
       ["scripts/generate_release_checksums.py","--project-root",".","--version",version],
       ["scripts/build_delivery_manifest.py","--project-root",".","--version",version],
