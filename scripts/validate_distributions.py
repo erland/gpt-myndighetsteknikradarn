@@ -90,6 +90,57 @@ def validate_chat(root: Path, cfg: dict) -> list[str]:
     return errors
 
 
+def validate_plugin(root: Path, cfg: dict) -> list[str]:
+    errors = []
+    build = root / "build" / "plugin"
+    if not build.exists():
+        return ["Plugin build directory missing"]
+
+    required = [
+        build / "plugin.json",
+        build / "README.md",
+        build / "VERSION",
+        build / "MANIFEST.json",
+        build / "runtime-contract.json",
+        build / "skills" / "myndighetsteknikradarn" / "SKILL.md",
+        build / "skills" / "myndighetsteknikradarn" / "references" / "canonical.md",
+    ]
+    for p in required:
+        if not p.exists():
+            errors.append(f"Missing required file: {p.relative_to(build)}")
+
+    for p in build.rglob("*"):
+        if not p.is_file():
+            continue
+        rel = p.relative_to(build)
+        if rel.parts and rel.parts[0] in {"tests", "evals", ".github", "docs", "research"}:
+            errors.append(f"Forbidden plugin path: {rel}")
+        if p.name == "run_evals.py" or p.name.startswith("validate_") or p.name.startswith("build_"):
+            errors.append(f"Development/release script leaked into plugin: {rel}")
+
+    if (build / "plugin.json").exists():
+        try:
+            plugin = json.loads((build / "plugin.json").read_text(encoding="utf-8"))
+            if plugin.get("version") != cfg["project"]["version"]:
+                errors.append("Plugin version does not match project version")
+        except Exception as exc:
+            errors.append(f"Invalid plugin.json: {exc}")
+
+    if (build / "runtime-contract.json").exists():
+        try:
+            contract = json.loads((build / "runtime-contract.json").read_text(encoding="utf-8"))
+            if contract.get("runtime_id") != "openai_plugin":
+                errors.append("Plugin runtime_id mismatch")
+            adapter = contract.get("adapter", {})
+            if adapter.get("mode") != "skills_first":
+                errors.append("Plugin adapter must be skills_first")
+            if adapter.get("mcp_generated") is not False:
+                errors.append("Plugin must not claim generated MCP")
+        except Exception as exc:
+            errors.append(f"Invalid plugin runtime contract: {exc}")
+    return errors
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--project-root", default=".")
@@ -102,6 +153,8 @@ def main() -> int:
     errors.extend(validate_chat(root, cfg))
     if cfg["runtime"]["custom_gpt"]["enabled"]:
         errors.extend(validate_custom(root, cfg))
+    if cfg["runtime"].get("openai_plugin", {}).get("enabled"):
+        errors.extend(validate_plugin(root, cfg))
 
     if errors:
         print("VALIDATION: FAIL")

@@ -1,4 +1,4 @@
-# Migreringsplan – GPT Byggaren 1.5.0
+# Migreringsplan – GPT Byggaren 1.5.1
 
 **Projekt:** Myndighetsteknikradarn  
 **Migrationstyp:** existing-project, behavior-preserving  
@@ -40,10 +40,16 @@ Aktiva peers:
 - Custom GPT,
 - OpenCode.
 
-Reducerade/inaktiva:
+Aktiva peers:
 
-- Claude Projects,
-- OpenAI Plugin.
+- ChatGPT Chat,
+- Custom GPT,
+- OpenCode,
+- OpenAI Plugin (skills-first, runtime-dependent state/code execution).
+
+Reducerad/inaktiv:
+
+- Claude Projects.
 
 Inför runtime contracts, runtime parity, Project ZIP, gemensamma checksummor, delivery manifest och release readiness.
 

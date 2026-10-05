@@ -38,9 +38,10 @@ release:
     - chat_zip
     - custom_gpt_zip
     - opencode_zip
+    - plugin_zip
     - sha256_checksums
     - delivery_manifest
-  note: GPT Builder 1.5.0-migreringen är klar och PR:n är redo att mergeas.
+  note: GPT Builder 1.5.1-migreringen är klar och PR:n är redo att mergeas.
 next_step:
   recommended: null
   title: Maintenance
@@ -53,4 +54,4 @@ resume:
     - docs/gpt-builder-1.5-migration-plan.md
     - STATUS.md
     - PROJECT.md
-  human_readable_status: Migreringen till GPT Byggaren 1.5.0 är klar. Projektet är i maintenance-läge.
+  human_readable_status: Migreringen till GPT Byggaren 1.5.1 med OpenAI Plugin peer-runtime är klar. Projektet är i maintenance-läge.

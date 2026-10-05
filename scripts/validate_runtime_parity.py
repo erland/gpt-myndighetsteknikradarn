@@ -9,13 +9,13 @@ expected={"chatgpt_chat","chatgpt_custom","claude_project","opencode","openai_pl
 if set(parity.get("registered_runtimes",[]))!=expected: errors.append("all five runtimes must be registered")
 if set(parity.get("compared_categories",[]))!={"behavior","capability","artifact","workspace_state","tool"}: errors.append("parity categories differ")
 candidates={x["runtime_id"]:x for x in cfg["analysis"]["runtime"]["candidates"]}
-for rid in {"chatgpt_chat","chatgpt_custom","opencode"}:
+for rid in {"chatgpt_chat","chatgpt_custom","opencode","openai_plugin"}:
     if candidates[rid].get("suitability")!="ready" or candidates[rid].get("activate_by_default") is not True: errors.append(rid+" not ready/active")
     p=parity["runtimes"][rid]
     if p.get("suitability")!="ready" or p.get("active") is not True: errors.append(rid+" parity not ready/active")
-for rid in {"claude_project","openai_plugin"}:
+for rid in {"claude_project"}:
     if candidates[rid].get("suitability")!="reduced" or candidates[rid].get("activate_by_default") is not False: errors.append(rid+" not reduced/inactive")
-for rid,path in {"chatgpt_chat":"runtime-contracts/chatgpt-chat.json","chatgpt_custom":"runtime-contracts/chatgpt-custom.json","opencode":"runtime-contracts/opencode.json"}.items():
+for rid,path in {"chatgpt_chat":"runtime-contracts/chatgpt-chat.json","chatgpt_custom":"runtime-contracts/chatgpt-custom.json","opencode":"runtime-contracts/opencode.json","openai_plugin":"runtime-contracts/openai-plugin.json"}.items():
     data=json.loads((ROOT/path).read_text(encoding="utf-8"))
     if data.get("runtime_id")!=rid: errors.append(rid+" runtime_id mismatch")
     if data.get("behavior",{}).get("canonical")!="src/instructions/canonical.md": errors.append(rid+" canonical drift")

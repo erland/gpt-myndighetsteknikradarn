@@ -7,7 +7,7 @@ def main():
     a=ap.parse_args(); root=Path(a.project_root).resolve()
     cfg=yaml.safe_load((root/"gpt-project.yaml").read_text(encoding="utf-8")); version=a.version or cfg["project"]["version"]; pid=cfg["project"]["id"]; dist=root/"dist"; errors=[]
     if subprocess.run([sys.executable,str(root/"scripts/validate_runtime_parity.py")],cwd=root).returncode: errors.append("runtime parity failed")
-    arts=[dist/f"{pid}-{kind}-{version}.zip" for kind in ["project","chat","custom-gpt","opencode"]]
+    arts=[dist/f"{pid}-{kind}-{version}.zip" for kind in ["project","chat","custom-gpt","opencode","plugin"]]
     for p in arts:
         if not p.exists(): errors.append("missing "+p.name); continue
         try:
@@ -20,7 +20,7 @@ def main():
     if not delivery.exists(): errors.append("delivery manifest missing")
     else:
         types={x.get("type") for x in json.loads(delivery.read_text(encoding="utf-8")).get("artifacts",[])}
-        if types!={"project_zip","chat_zip","custom_gpt_zip","opencode_zip"}: errors.append("delivery types differ")
+        if types!={"project_zip","chat_zip","custom_gpt_zip","opencode_zip","plugin_zip"}: errors.append("delivery types differ")
     if sums.exists():
         got={}
         for line in sums.read_text(encoding="utf-8").splitlines():
