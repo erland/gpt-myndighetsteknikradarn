@@ -15,6 +15,7 @@ common=[
  "scripts/build_custom_gpt_runtime.py",
  "scripts/build_opencode_runtime.py",
  "scripts/validate_opencode_runtime.py",
+ "scripts/build_plugin_runtime.py",
  "scripts/build_project_package.py",
  "scripts/validate_runtime_parity.py",
  "scripts/validate_distributions.py",
