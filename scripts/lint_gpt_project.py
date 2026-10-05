@@ -202,7 +202,7 @@ def lint(root: Path) -> dict:
             findings.append(finding("GP271", "error", "Runtime parity must register all five runtimes"))
         if set(parity.get("compared_categories", [])) != {"behavior","capability","artifact","workspace_state","tool"}:
             findings.append(finding("GP272", "error", "Runtime parity categories differ"))
-        for rel in ["runtime-parity.yaml","runtime-contracts/chatgpt-chat.json","runtime-contracts/chatgpt-custom.json","runtime-contracts/opencode.json",
+        for rel in ["runtime-parity.yaml","runtime-contracts/chatgpt-chat.json","runtime-contracts/chatgpt-custom.json","runtime-contracts/opencode.json","runtime-contracts/openai-plugin.json",
                     "scripts/build_project_package.py","scripts/generate_release_checksums.py","scripts/build_delivery_manifest.py",
                     "scripts/validate_runtime_parity.py","scripts/validate_release_readiness.py"]:
             if not (root / rel).exists():
@@ -228,7 +228,7 @@ def lint(root: Path) -> dict:
             findings.append(finding("GP400", "error", "CI workflow missing", wf))
         else:
             text = p.read_text(encoding="utf-8")
-            builders = ["build_chat_runtime.py", "build_custom_gpt_runtime.py"]
+            builders = ["build_chat_runtime.py", "build_custom_gpt_runtime.py", "build_plugin_runtime.py"]
             for builder in builders:
                 if builder not in text:
                     findings.append(finding("GP401", "error", f"CI does not invoke {builder}", wf))
