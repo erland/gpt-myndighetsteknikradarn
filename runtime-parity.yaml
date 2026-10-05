@@ -30,6 +30,7 @@ runtimes:
     active: false
     reason: Persistent ResearchRun/checkpoint state and local deterministic toolchain are not fully available.
   openai_plugin:
-    suitability: reduced
-    active: false
-    reason: Skills can carry methodology but not the full workspace/state and local deterministic toolchain.
+    suitability: ready
+    active: true
+    contract: runtime-contracts/openai-plugin.json
+    compatibility: ready_runtime_dependent
