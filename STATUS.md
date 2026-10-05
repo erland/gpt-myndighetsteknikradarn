@@ -1,7 +1,7 @@
 # Status – Myndighetsteknikradarn
 
 **Produktversion:** 1.0.2  
-**Migration:** GPT Byggaren 1.5.0  
+**Migration:** GPT Byggaren 1.5.1  
 **Tillstånd:** Maintenance
 
 Den ursprungliga 15-stegs utvecklingsplanen är slutförd och lämnas oförändrad som projekthistorik. Den nya 1.5-migreringen är en separat behavior-preserving modernisering av projekt- och runtime-modellen.
@@ -20,7 +20,7 @@ Den ursprungliga 15-stegs utvecklingsplanen är slutförd och lämnas oförändr
 - Custom GPT: ready / active, med reducerad exekveringsdeterminism
 - OpenCode: ready / active
 - Claude Projects: reduced / inactive
-- OpenAI Plugin: reduced / inactive
+- OpenAI Plugin: ready / active, med hostberoende persistent state, web och code execution
 
 ## Stateful grund
 
@@ -43,7 +43,7 @@ OpenCode-distributionen bygger och validerar i CI tillsammans med hela regressio
 
 ## Verifiering av steg 4
 
-CI passerade fem-runtime parity-modellen. Aktiva peer-runtimes är ChatGPT Chat, Custom GPT och OpenCode; Claude Projects och OpenAI Plugin är explicit reducerade/inaktiva. Releaseleveransen bygger nu Project ZIP, Chat ZIP, Custom GPT ZIP och OpenCode ZIP samt gemensamma SHA-256-checksummor och delivery manifest. Release readiness verifierar hela leveransmängden.
+CI passerade fem-runtime parity-modellen. Aktiva peer-runtimes är ChatGPT Chat, Custom GPT, OpenCode och OpenAI Plugin; Claude Projects är explicit reducerad/inaktiv. Pluginen är skills-first, paketerar canonical metodik och utvalda deterministiska runtime-skript, medan persistent state, web och code execution deklareras som hostberoenden. Releaseleveransen bygger Project ZIP, Chat ZIP, Custom GPT ZIP, OpenCode ZIP och Plugin ZIP samt gemensamma SHA-256-checksummor och delivery manifest. Release readiness verifierar hela leveransmängden.
 
 ## Verifiering av steg 5
 
@@ -51,7 +51,7 @@ Slutkörningen passerade full regression, 18 realistiska evals, alla tre aktiva 
 
 ## Aktuellt läge
 
-Migreringen till GPT Byggaren 1.5.0 är klar. Projektet är i **maintenance-läge** och PR:n är redo att mergeas.
+Migreringen till GPT Byggaren 1.5.1 med OpenAI Plugin peer-runtime är klar. Projektet är i **maintenance-läge** och PR:n är redo att mergeas.
 
 ## Blockerare
 
