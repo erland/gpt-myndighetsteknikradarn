@@ -221,9 +221,9 @@ analysis:
         activate_by_default: true
         reason: Lokal workspace, shell och scripts passar persistent ResearchRun/checkpoint, scoring, coverage och export.
       - runtime_id: openai_plugin
-        suitability: reduced
-        activate_by_default: false
-        reason: Skills kan bära metodik men ger inte full workspace/state och lokal deterministic toolchain.
+        suitability: ready
+        activate_by_default: true
+        reason: Skills-first-distributionen bär canonical metodik, modeller, workflows och utvalda deterministiska runtime-skript; persistent workspace, web och code execution är explicita host-runtime-beroenden.
 
 capabilities:
   contract_version: 1
