@@ -97,6 +97,27 @@ runtime:
     runtime_root: .opencode/myndighetsteknikradarn
     state_root: .myndighetsteknikradarn-state
     output_root: myndighetsteknikradarn-output
+  openai_plugin:
+    enabled: true
+    role: peer_distribution
+    mode: skills_first
+    builder: scripts/build_plugin_runtime.py
+    entrypoint: skills/myndighetsteknikradarn/SKILL.md
+    compatibility: ready_runtime_dependent
+    mcp_generated: false
+    web_dependency: host_runtime
+    filesystem_dependency: host_runtime
+    code_execution_dependency: host_runtime
+    persistent_state_dependency: host_runtime
+    script_resources:
+      - scripts/research_state.py
+      - scripts/score_assessment.py
+      - scripts/reconcile_coverage.py
+      - scripts/deduplicate_evidence.py
+      - scripts/generate_search_plan.py
+      - scripts/render_result.py
+      - scripts/rank_contacts.py
+      - scripts/export_report.py
 exports:
   markdown: true
   pdf: true
@@ -126,6 +147,7 @@ release:
     - chat_zip
     - custom_gpt_zip
     - opencode_zip
+    - plugin_zip
     - checksums
     - delivery_manifest
 policies:
@@ -163,7 +185,7 @@ release_validation:
   stable_release_document: docs/stable-release.md
 
 migration:
-  target: gpt-builder-1.5.0
+  target: gpt-builder-1.5.1
   type: existing-project
   preserve_domain_behavior: true
   preserve_existing_chat_custom_builds_until_replaced: true
