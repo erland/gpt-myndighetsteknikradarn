@@ -93,7 +93,7 @@ Version `1.0.2` är den första stabila releasen efter slutförd utvecklingsplan
 
 ## GPT Byggaren 1.5-migrering
 
-Den ursprungliga produktutvecklingen steg 1–15 är avslutad. Migreringen till GPT Byggaren 1.5.0 är en separat, behavior-preserving modernisering.
+Den ursprungliga produktutvecklingen steg 1–15 är avslutad. Migreringen till GPT Byggaren 1.5.1 är en separat, behavior-preserving modernisering.
 
 Projektet klassas som `stateful` eftersom större kartläggningar använder persistent `ResearchRun`, atomiska `ResearchCheckpoint` och deterministic resume.
 
@@ -103,7 +103,7 @@ Runtime-mål:
 - Custom GPT – ready / active
 - OpenCode – ready / active
 - Claude Projects – reduced / inactive
-- OpenAI Plugin – reduced / inactive
+- OpenAI Plugin – ready / active (runtime-dependent state/code execution)
 
 Migreringsplan: `docs/gpt-builder-1.5-migration-plan.md`.
 
@@ -112,4 +112,4 @@ Migreringsplan: `docs/gpt-builder-1.5-migration-plan.md`.
 
 - Runtime parity: `runtime-parity.yaml`
 - Runtime contracts: `runtime-contracts/`
-- GitHub Release bygger Project, Chat, Custom GPT och OpenCode samt gemensamma SHA-256-checksummor och delivery manifest.
+- GitHub Release bygger Project, Chat, Custom GPT, OpenCode och OpenAI Plugin samt gemensamma SHA-256-checksummor och delivery manifest.
